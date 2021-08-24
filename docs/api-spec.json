@@ -1,0 +1,542 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "API Finaway",
+    "description": "API Spec for Finaway RESTful API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://finaway.id/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Check credentials and get auth token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email",
+                  "password"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "uniqueItems": true,
+                    "example": "johndoe@mail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "secret"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged in success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 201
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "CREATED"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DataAuthenticationSuccess"
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/signup": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register new account",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signup success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 201
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "CREATED"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/DataAuthenticationSuccess"
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "email": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "password": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/activate/{token}": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Activate account"
+      }
+    },
+    "/auth/password/reset": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Password reset request"
+      },
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Reset current password with new password"
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Generate new access token"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": [
+          "Authorization"
+        ],
+        "summary": "Generate new access token"
+      }
+    },
+    "/account": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get current logged in user data"
+      },
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Change user identity"
+      }
+    },
+    "/account/photo": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Update profile photo"
+      }
+    },
+    "/account/password": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Change password"
+      }
+    },
+    "/account/emails": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Get all registered emails"
+      },
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Add email"
+      }
+    },
+    "/account/emails/{email_id}/primary": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Make email as primary"
+      }
+    },
+    "/account/emails/{email_id}": {
+      "delete": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Delete registered email"
+      }
+    },
+    "/reminders": {
+      "get": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Get all reminders"
+      },
+      "post": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Add new reminder"
+      }
+    },
+    "/reminders/{reminder_id}": {
+      "get": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Get reminder by ID"
+      },
+      "put": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Change reminder"
+      },
+      "delete": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Delete reminder"
+      }
+    },
+    "/reminders/{reminder_id}/enable": {
+      "put": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Enable reminder"
+      }
+    },
+    "/reminders/{reminder_id}/disable": {
+      "put": {
+        "tags": [
+          "Reminders"
+        ],
+        "summary": "Disable reminder"
+      }
+    },
+    "/finance/records": {
+      "get": {
+        "tags": [
+          "Finance Records"
+        ],
+        "summary": "Get all financial records"
+      },
+      "post": {
+        "tags": [
+          "Finance Records"
+        ],
+        "summary": "Add financial record"
+      }
+    },
+    "/finance/records/{record_id}": {
+      "get": {
+        "tags": [
+          "Finance Records"
+        ],
+        "summary": "Get financial record"
+      },
+      "put": {
+        "tags": [
+          "Finance Records"
+        ],
+        "summary": "Change financial record"
+      },
+      "delete": {
+        "tags": [
+          "Finance Records"
+        ],
+        "summary": "Delete records"
+      }
+    },
+    "/finance/categories": {
+      "get": {
+        "tags": [
+          "Finance Categories"
+        ],
+        "summary": "Get all financial categories"
+      },
+      "post": {
+        "tags": [
+          "Finance Categories"
+        ],
+        "summary": "Create financial category"
+      }
+    },
+    "/finance/categories/{category_id}": {
+      "get": {
+        "tags": [
+          "Finance Categories"
+        ],
+        "summary": "Find financial category by ID"
+      },
+      "put": {
+        "tags": [
+          "Finance Categories"
+        ],
+        "summary": "Change financial category"
+      },
+      "delete": {
+        "tags": [
+          "Finance Categories"
+        ],
+        "summary": "Delete financial category"
+      }
+    },
+    "/finance/categories/default": {
+      "get": {
+        "tags": [
+          "Finance Default Categories"
+        ],
+        "summary": "Get all default financial record categories"
+      }
+    },
+    "/finance/categories/default/{category_id}": {
+      "get": {
+        "tags": [
+          "Finance Default Categories"
+        ],
+        "summary": "Find default financial record category by ID"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "required": [
+          "_id",
+          "name",
+          "email",
+          "password",
+          "created_at"
+        ],
+        "properties": {
+          "_id": {
+            "type": "string",
+            "readOnly": true,
+            "example": "612524c252a2b7d7ca7aab9b"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "uniqueItems": true,
+            "minLength": 0,
+            "maxLength": 255,
+            "example": "johndoe@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "created_at": {
+            "type": "string",
+            "readOnly": true,
+            "example": "2021-02-24 11:26:39"
+          },
+          "updated_at": {
+            "type": "string",
+            "readOnly": true,
+            "nullable": true,
+            "example": "2021-02-24 11:26:39"
+          }
+        }
+      },
+      "DataAuthenticationSuccess": {
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "example": "eyXxx.eyXxx.xxx"
+          },
+          "refresh_token": {
+            "type": "string",
+            "example": "eyXxx.eyXxx.xxx"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "ResponseTooManyRequest": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "default": 429
+          },
+          "status": {
+            "type": "string",
+            "default": "TOO_MANY_REQUEST"
+          },
+          "data": {
+            "type": "object",
+            "nullable": true,
+            "default": null
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "_global": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "default": "Too many request"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
