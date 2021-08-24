@@ -1,0 +1,11 @@
+{
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.suggest.insertMode": "replace",
+    "gitlens.codeLens.scopes": ["document"]
+  }
+}
