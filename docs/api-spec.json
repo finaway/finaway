@@ -206,7 +206,87 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "Activate account"
+        "summary": "Account activation",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "description": "Account activation token that have been sent by email",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account activation success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "token": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/auth/password/reset": {
@@ -214,13 +294,297 @@
         "tags": [
           "Authentication"
         ],
-        "summary": "Password reset request"
+        "summary": "Password reset request",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "johndoe@mail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset password request success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/password/reset/{token}": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get user's name & email by reset password token",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "description": "Forgot password token that have been sent by email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get user data success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "John Doe"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "johndoe@mail.com"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
       },
       "put": {
         "tags": [
           "Authentication"
         ],
-        "summary": "Reset current password with new password"
+        "summary": "Reset current password with new password",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "description": "Forgot password token that have been sent by email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "password"
+                ],
+                "properties": {
+                  "password": {
+                    "description": "New password",
+                    "type": "string",
+                    "example": "secret"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/auth/refresh": {
@@ -435,6 +799,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
     "schemas": {
       "User": {
         "type": "object",
