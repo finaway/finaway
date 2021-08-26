@@ -592,7 +592,97 @@
         "tags": [
           "Authorization"
         ],
-        "summary": "Generate new access token"
+        "summary": "Generate new access token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string",
+                    "example": "eyXxx.eyXxx.xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Refresh token success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string",
+                          "example": "eyXxx.eyXxx.xxx"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "refresh_token": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/auth/logout": {
@@ -600,7 +690,100 @@
         "tags": [
           "Authorization"
         ],
-        "summary": "Generate new access token"
+        "summary": "Generate new access token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "refresh_token"
+                ],
+                "properties": {
+                  "refresh_token": {
+                    "type": "string",
+                    "example": "eyXxx.eyXxx.xxx"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Refresh token success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string",
+                          "example": "eyXxx.eyXxx.xxx"
+                        }
+                      }
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 400
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "BAD_REQUEST"
+                    },
+                    "data": {
+                      "default": null
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "refresh_token": {
+                          "$ref": "#/components/schemas/ValidationError"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseTooManyRequest"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/account": {
