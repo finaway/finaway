@@ -849,13 +849,13 @@
     "/reminders": {
       "get": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Get all reminders"
       },
       "post": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Add new reminder"
       }
@@ -863,19 +863,19 @@
     "/reminders/{reminder_id}": {
       "get": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Get reminder by ID"
       },
       "put": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Change reminder"
       },
       "delete": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Delete reminder"
       }
@@ -883,7 +883,7 @@
     "/reminders/{reminder_id}/enable": {
       "put": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Enable reminder"
       }
@@ -891,7 +891,7 @@
     "/reminders/{reminder_id}/disable": {
       "put": {
         "tags": [
-          "Reminders"
+          "Reminders (next update)"
         ],
         "summary": "Disable reminder"
       }
