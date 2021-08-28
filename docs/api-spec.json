@@ -100,14 +100,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -189,14 +182,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -277,14 +263,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -372,14 +351,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -470,14 +442,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       },
@@ -575,14 +540,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -673,14 +631,7 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
@@ -774,74 +725,101 @@
             }
           },
           "429": {
-            "description": "Too many request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResponseTooManyRequest"
-                }
-              }
-            }
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
           }
         }
       }
     },
-    "/account": {
+    "/profile": {
       "get": {
         "tags": [
-          "Account"
+          "Profile"
         ],
-        "summary": "Get current logged in user data"
+        "summary": "Get current logged in user data",
+        "responses": {
+          "200": {
+            "description": "Get profile success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "default": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "default": "OK"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    },
+                    "errors": {
+                      "default": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/schemas/ResponseUnauthorized"
+          },
+          "429": {
+            "$ref": "#/components/schemas/ResponseTooManyRequest"
+          }
+        }
       },
       "put": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Change user identity"
       }
     },
-    "/account/photo": {
+    "/profile/photo": {
       "put": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Update profile photo"
       }
     },
-    "/account/password": {
+    "/profile/password": {
       "put": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Change password"
       }
     },
-    "/account/emails": {
+    "/profile/emails": {
       "get": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Get all registered emails"
       },
       "post": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Add email"
       }
     },
-    "/account/emails/{email_id}/primary": {
+    "/profile/emails/{email_id}/primary": {
       "put": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Make email as primary"
       }
     },
-    "/account/emails/{email_id}": {
+    "/profile/emails/{email_id}": {
       "delete": {
         "tags": [
-          "Account"
+          "Profile"
         ],
         "summary": "Delete registered email"
       }
@@ -1022,6 +1000,11 @@
             "type": "string",
             "writeOnly": true
           },
+          "is_verified": {
+            "type": "boolean",
+            "readOnly": true,
+            "example": true
+          },
           "created_at": {
             "type": "string",
             "readOnly": true,
@@ -1051,31 +1034,77 @@
           }
         }
       },
+      "ResponseUnauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number",
+                  "default": 401
+                },
+                "status": {
+                  "type": "string",
+                  "default": "Unauthorized"
+                },
+                "data": {
+                  "type": "object",
+                  "nullable": true,
+                  "default": null
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "_global": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "default": "Unauthorized"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "ResponseTooManyRequest": {
-        "type": "object",
-        "properties": {
-          "code": {
-            "type": "number",
-            "default": 429
-          },
-          "status": {
-            "type": "string",
-            "default": "TOO_MANY_REQUEST"
-          },
-          "data": {
-            "type": "object",
-            "nullable": true,
-            "default": null
-          },
-          "errors": {
-            "type": "object",
-            "properties": {
-              "_global": {
-                "type": "object",
-                "properties": {
-                  "message": {
-                    "type": "string",
-                    "default": "Too many request"
+        "description": "Too many request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "number",
+                  "default": 429
+                },
+                "status": {
+                  "type": "string",
+                  "default": "TooManyRequest"
+                },
+                "data": {
+                  "type": "object",
+                  "nullable": true,
+                  "default": null
+                },
+                "errors": {
+                  "type": "object",
+                  "properties": {
+                    "_global": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string",
+                          "default": "Too many request"
+                        }
+                      }
+                    }
                   }
                 }
               }
