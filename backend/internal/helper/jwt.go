@@ -50,7 +50,10 @@ func Verify(token string) (JwtPayload, error) {
 
 		return []byte(config.SECRET_KEY), nil
 	})
-	PanicIfError(err)
+
+	if err != nil {
+		return JwtPayload{}, errors.New("invalid token")
+	}
 
 	if claims, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
 		return JwtPayload{

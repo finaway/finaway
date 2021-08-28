@@ -18,7 +18,11 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 		return badRequestError(c, err.(BadRequestError))
 	}
 
-	if isNotFountError := IsNotFoundError(err); isNotFountError {
+	if isUnauthorizedError := IsUnauthorizedError(err); isUnauthorizedError {
+		return unauthorizedError(c, err.(UnauthorizedError))
+	}
+
+	if isNotFoundError := IsNotFoundError(err); isNotFoundError {
 		return notFoundError(c, err.(NotFoundError))
 	}
 
@@ -48,6 +52,18 @@ func badRequestError(c *fiber.Ctx, err BadRequestError) error {
 		Code:   http.StatusBadRequest,
 		Data:   nil,
 		Errors: err.Errors,
+	}
+
+	return resp.JSON(c)
+}
+
+func unauthorizedError(c *fiber.Ctx, err UnauthorizedError) error {
+	resp := web.WebResponse{
+		Code: http.StatusUnauthorized,
+		Data: nil,
+		Errors: web.ResponseErrors{
+			"_global": web.ResponseError{Message: err.Error()},
+		},
 	}
 
 	return resp.JSON(c)

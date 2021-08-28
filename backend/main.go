@@ -22,12 +22,17 @@ func main() {
 	validate := validator.New()
 	helper.InjectValidate(validate)
 
-	userRepo := repository.NewUserRepository()
+	userRepo := repository.NewUserRepository(db)
+
 	authService := service.NewAuthService(db, validate, userRepo)
+	profileService := service.NewProfileService(db, validate, userRepo)
+
 	authController := controller.NewAuthController(authService)
+	profileController := controller.NewProfileController(profileService)
 
 	controllers := app.Controller{
-		AuthController: authController,
+		AuthController:    authController,
+		ProfileController: profileController,
 	}
 
 	router := app.NewRouter(controllers)

@@ -8,8 +8,8 @@ import (
 	"net/http"
 )
 
-func ReadBody(response *http.Response) web.WebResponse {
-	body, err := io.ReadAll(response.Body)
+func ReadBody(resp *http.Response) web.WebResponse {
+	body, err := io.ReadAll(resp.Body)
 	helper.PanicIfError(err)
 
 	var webResponse web.WebResponse
