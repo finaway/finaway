@@ -1,4 +1,10 @@
 package service
 
+import (
+	"context"
+	"finaway/internal/model/web"
+)
+
 type AuthService interface {
+	Login(ctx context.Context, req web.LoginRequest) web.LoginResponse
 }

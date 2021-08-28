@@ -1,12 +1,21 @@
 package app
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"finaway/internal/exception"
+
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
+)
 
 func NewRouter(c Controller) *fiber.App {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		ErrorHandler: exception.ErrorHandler,
+	})
 
-	app.Post("/api/v1/auth/login", c.AuthController.Login)
-	app.Post("/api/v1/auth/signup", c.AuthController.Signup)
+	app.Use(recover.New())
+
+	app.Post("/api/auth/login", c.AuthController.Login)
+	app.Post("/api/auth/signup", c.AuthController.Signup)
 
 	return app
 }

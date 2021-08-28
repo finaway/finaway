@@ -1,4 +1,4 @@
-package app
+package helpertest
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewDB() *mongo.Database {
+func newTestDB() *mongo.Database {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
@@ -19,9 +19,4 @@ func NewDB() *mongo.Database {
 
 	dbName := helper.GetDBNameFromURI(config.MONGODB_URI)
 	return client.Database(dbName)
-}
-
-func DisconnectDB(db *mongo.Database) {
-	err := db.Client().Disconnect(context.Background())
-	helper.PanicIfError(err)
 }

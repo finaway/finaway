@@ -1,6 +1,7 @@
 package main
 
 import (
+	"finaway/config"
 	"finaway/internal/app"
 	"finaway/internal/controller"
 	"finaway/internal/helper"
@@ -10,11 +11,16 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+func init() {
+	config.Init()
+}
+
 func main() {
 	db := app.NewDB()
 	defer app.DisconnectDB(db)
 
 	validate := validator.New()
+	helper.InjectValidate(validate)
 
 	userRepo := repository.NewUserRepository()
 	authService := service.NewAuthService(db, validate, userRepo)
