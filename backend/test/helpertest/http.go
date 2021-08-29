@@ -9,6 +9,8 @@ import (
 )
 
 func ReadBody(resp *http.Response) web.WebResponse {
+	defer resp.Body.Close()
+
 	body, err := io.ReadAll(resp.Body)
 	helper.PanicIfError(err)
 
