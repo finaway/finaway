@@ -40,6 +40,8 @@ func InsertTestUser(db *mongo.Database) string {
 
 func TestLogin_Successful(t *testing.T) {
 	db, router := helpertest.SetupTest()
+	defer helpertest.Cleanup(db)
+
 	insertedID := InsertTestUser(db)
 
 	jsonBody, _ := json.Marshal(testUser)
@@ -74,6 +76,8 @@ func TestLogin_Successful(t *testing.T) {
 
 func TestLogin_ValidationError(t *testing.T) {
 	db, router := helpertest.SetupTest()
+	defer helpertest.Cleanup(db)
+
 	InsertTestUser(db)
 
 	tests := []struct {

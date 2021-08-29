@@ -20,17 +20,17 @@ import (
 
 // Setup env for test
 func init() {
-	pattern := regexp.MustCompile(`(.*?)backend\/test`)
+	pattern := regexp.MustCompile(`(.*?)backend\/`)
 
 	dir, err := os.Getwd()
 	helper.PanicIfError(err)
 
 	testDir := pattern.FindString(dir)
-	config.Init(filepath.Join(testDir, "../.env.test"))
+	config.Init(filepath.Join(testDir, ".env.test"))
 }
 
 func SetupTest() (*mongo.Database, *fiber.App) {
-	db := app.NewDB()
+	db := NewTestDB()
 
 	collections, err := db.ListCollectionNames(context.Background(), bson.D{})
 	helper.PanicIfError(err)

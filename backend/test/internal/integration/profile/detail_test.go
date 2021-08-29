@@ -2,7 +2,6 @@ package detail_test
 
 import (
 	"context"
-	"finaway/internal/app"
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/test/helpertest"
@@ -39,7 +38,7 @@ func InsertTestUser(db *mongo.Database) string {
 
 func TestProfileDetail_Successful(t *testing.T) {
 	db, router := helpertest.SetupTest()
-	defer app.DisconnectDB(db)
+	defer helpertest.Cleanup(db)
 
 	insertedID := InsertTestUser(db)
 	userObjID, _ := primitive.ObjectIDFromHex(insertedID)
@@ -68,7 +67,7 @@ func TestProfileDetail_Successful(t *testing.T) {
 
 func TestProfileDetail_Unauthorized(t *testing.T) {
 	db, router := helpertest.SetupTest()
-	defer app.DisconnectDB(db)
+	defer helpertest.Cleanup(db)
 
 	request := httptest.NewRequest(http.MethodGet, "/api/profile", nil)
 	request.Header.Add("Content-Type", "application/json")
