@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
 	"finaway/internal/model/web"
 	"finaway/internal/service"
@@ -22,9 +21,10 @@ func NewProfileController(profileService service.ProfileService) ProfileControll
 }
 
 func (controller *profileController) Me(c *fiber.Ctx) error {
-	val, _ := c.Locals("userID").(string)
-	userID, err := primitive.ObjectIDFromHex(val)
-	helper.PanicIfError(err)
+	userID, ok := c.Locals("userID").(primitive.ObjectID)
+	if !ok {
+		panic("invalid userID data type")
+	}
 
 	user := domain.User{ID: userID}
 	data := controller.profileService.Me(c.Context(), user)
