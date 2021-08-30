@@ -8,6 +8,7 @@ import (
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/internal/service"
+	"finaway/test/datatest"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -39,6 +40,8 @@ func SetupTest() (*mongo.Database, *fiber.App) {
 	for _, collection := range collections {
 		db.Collection(collection).Drop(context.Background())
 	}
+
+	datatest.Migrate(db)
 
 	validate := validator.New()
 	helper.InjectValidate(validate)

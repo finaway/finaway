@@ -1,68 +1,48 @@
 package detail_test
 
 import (
-	"context"
 	"finaway/internal/helper"
-	"finaway/internal/repository"
+	"finaway/internal/model/domain"
+	"finaway/test/datatest"
 	"finaway/test/helpertest"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
 )
-
-var testUser = struct {
-	Email    string
-	Password string
-}{
-	Email:    "johndoe@test.com",
-	Password: "secret",
-}
-
-func InsertTestUser(db *mongo.Database) string {
-	pwdHash, _ := helper.HashPassword(testUser.Password)
-	user, _ := db.Collection("users").InsertOne(
-		context.Background(),
-		map[string]string{
-			"email":    testUser.Email,
-			"password": pwdHash,
-		},
-	)
-
-	return user.InsertedID.(primitive.ObjectID).Hex()
-}
 
 func TestProfileDetail_Successful(t *testing.T) {
 	db, router := helpertest.SetupTest()
 	defer helpertest.Cleanup(db)
 
-	insertedID := InsertTestUser(db)
-	userObjID, _ := primitive.ObjectIDFromHex(insertedID)
+	wg := sync.WaitGroup{}
 
-	userRepo := repository.NewUserRepository(db)
-	var accessToken string
+	for _, user := range datatest.Users {
+		wg.Add(1)
+		go func(user domain.User) {
+			defer wg.Done()
+			jwt := helpertest.GenerateJwt(user)
 
-	user, err := userRepo.FindOneById(context.Background(), userObjID)
-	helper.PanicIfError(err)
+			request := httptest.NewRequest(http.MethodGet, "/api/profile", nil)
+			request.Header.Add("Content-Type", "application/json")
+			request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", jwt.AccessToken))
 
-	accessToken = helper.GenerateAccessToken(user)
+			resp, err := router.Test(request)
+			helper.PanicIfError(err)
 
-	request := httptest.NewRequest(http.MethodGet, "/api/profile", nil)
-	request.Header.Add("Content-Type", "application/json")
-	request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+			webResp := helpertest.ReadBody(resp)
 
-	resp, err := router.Test(request)
-	helper.PanicIfError(err)
+			assert.Equal(t, http.StatusOK, resp.StatusCode)
+			assert.Equal(t, user.ID.Hex(), webResp.Data.(map[string]interface{})["_id"])
+			assert.Equal(t, user.Name, webResp.Data.(map[string]interface{})["name"])
+			assert.Equal(t, user.Email, webResp.Data.(map[string]interface{})["email"])
+		}(user)
+	}
 
-	webResp := helpertest.ReadBody(resp)
-
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
-	assert.Equal(t, insertedID, webResp.Data.(map[string]interface{})["_id"])
-	assert.Equal(t, testUser.Email, webResp.Data.(map[string]interface{})["email"])
+	wg.Wait()
 }
 
 func TestProfileDetail_Unauthorized(t *testing.T) {
