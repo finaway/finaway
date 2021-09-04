@@ -55,7 +55,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "CREATED"
+                      "default": "Created"
                     },
                     "data": {
                       "$ref": "#/components/schemas/DataAuthenticationSuccess"
@@ -81,7 +81,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -134,7 +134,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "CREATED"
+                      "default": "Created"
                     },
                     "data": {
                       "$ref": "#/components/schemas/DataAuthenticationSuccess"
@@ -160,7 +160,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "errors": {
                       "type": "object",
@@ -218,7 +218,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "default": null
@@ -244,7 +244,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -306,7 +306,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "default": null
@@ -332,7 +332,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -387,7 +387,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "type": "object",
@@ -423,7 +423,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -495,7 +495,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "default": null
@@ -521,7 +521,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -580,7 +580,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "type": "object",
@@ -612,7 +612,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -674,7 +674,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "type": "object",
@@ -706,7 +706,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "BAD_REQUEST"
+                      "default": "BadRequest"
                     },
                     "data": {
                       "default": null
@@ -730,6 +730,40 @@
         }
       }
     },
+    "/account/activate": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Activate the primary email",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "token"
+                ],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "example": "xyz"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/account/activate/resend": {
+      "post": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "Resend activation token"
+      }
+    },
     "/profile": {
       "get": {
         "tags": [
@@ -750,7 +784,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "default": "OK"
+                      "default": "Ok"
                     },
                     "data": {
                       "$ref": "#/components/schemas/User"
@@ -971,17 +1005,17 @@
       "User": {
         "type": "object",
         "required": [
-          "_id",
+          "id",
           "name",
           "email",
           "password",
           "created_at"
         ],
         "properties": {
-          "_id": {
+          "id": {
             "type": "string",
             "readOnly": true,
-            "example": "612524c252a2b7d7ca7aab9b"
+            "example": "07885962-b316-4fa9-9d9a-018e94020fd1"
           },
           "name": {
             "type": "string",
@@ -1006,15 +1040,15 @@
             "example": true
           },
           "created_at": {
-            "type": "string",
+            "type": "number",
             "readOnly": true,
-            "example": "2021-02-24 11:26:39"
+            "example": 1351700038
           },
           "updated_at": {
-            "type": "string",
+            "type": "number",
             "readOnly": true,
             "nullable": true,
-            "example": "2021-02-24 11:26:39"
+            "example": 1351700038
           }
         }
       },
