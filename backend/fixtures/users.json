@@ -1,0 +1,42 @@
+[
+  {
+    "id": "04e61888-383c-4b2a-a606-4b76ccbcb0e3",
+    "name": "Agus Stiawan",
+    "password": "$2a$10$.8.cY9YAsUdl.j34/pOeB.LRNYbNTrCu9dt/lS8d9MF9CHClTc5GK",
+    "profile_photo": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "bda5b6d3-f2c6-464a-8498-0300be1a4194",
+    "name": "John Doe",
+    "password": "$2a$10$4DYcv5ij5.VEDKrTYXr7v.gAfHchQbt4ngJTfOeOhNCbOoSX6M/6O",
+    "profile_photo": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "79c538b1-0dce-4e05-b8b1-a03d27b59f3a",
+    "name": "Jane Doe",
+    "password": "$2a$10$u/XcVjWB6M2s9lRGyklVhuxVVtyRac3VpJh0c4gEbW0VtSBEvAwB.",
+    "profile_photo": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "366b9655-03bd-4c4a-88a2-70f2aeb6f2fb",
+    "name": "Lorem Ipsum",
+    "password": "$2a$10$qD.YbhZBauWST.ihS704Fe0FTOF76GbBaqv7hf25mNl8osfs7Bpn.",
+    "profile_photo": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "2f0bf791-8ba2-4183-8a9d-dd00a173c2d2",
+    "name": "Dolor Sit",
+    "password": "$2a$10$7Nz.KQ9PcSid1McGJ6ZnKuimjCdnaTBFYXPH4vbX6x4d41AH/39u6",
+    "profile_photo": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  }
+]

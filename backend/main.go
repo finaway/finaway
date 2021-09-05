@@ -9,6 +9,7 @@ import (
 	"finaway/internal/service"
 
 	"github.com/go-playground/validator/v10"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func init() {
@@ -18,24 +19,16 @@ func init() {
 func main() {
 	db := app.NewDB()
 	defer app.DisconnectDB(db)
+	app.MigrateModels(db)
 
 	validate := validator.New()
 	helper.InjectValidate(validate)
 
-	userRepo := repository.NewUserRepository(db)
+	repo := repository.New(db)
+	serv := service.New(db, validate, repo)
+	ctrl := controller.New(serv)
 
-	authService := service.NewAuthService(db, validate, userRepo)
-	profileService := service.NewProfileService(db, validate, userRepo)
-
-	authController := controller.NewAuthController(authService)
-	profileController := controller.NewProfileController(profileService)
-
-	controllers := app.Controller{
-		AuthController:    authController,
-		ProfileController: profileController,
-	}
-
-	router := app.NewRouter(controllers)
+	router := app.NewRouter(ctrl)
 	err := router.Listen(":3000")
 	helper.PanicIfError(err)
 }

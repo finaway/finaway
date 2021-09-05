@@ -4,27 +4,24 @@ import (
 	"context"
 	"finaway/internal/exception"
 	"finaway/internal/helper"
-	"finaway/internal/model/domain"
 	"finaway/internal/model/web"
 	"finaway/internal/repository"
 
 	"github.com/go-playground/validator/v10"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 type authService struct {
-	db             *mongo.Database
-	validate       *validator.Validate
-	userRepository repository.UserRepository
+	db       *gorm.DB
+	validate *validator.Validate
+	repo     *repository.Repository
 }
 
-func NewAuthService(db *mongo.Database, validate *validator.Validate, userRepo repository.UserRepository) AuthService {
+func NewAuthService(db *gorm.DB, validate *validator.Validate, repo *repository.Repository) AuthService {
 	return &authService{
-		db:             db,
-		validate:       validate,
-		userRepository: userRepo,
+		db:       db,
+		validate: validate,
+		repo:     repo,
 	}
 }
 
@@ -32,32 +29,37 @@ func (serv *authService) Login(ctx context.Context, req web.LoginRequest) web.Lo
 	err := serv.validate.Struct(req)
 	helper.PanicIfError(err)
 
-	var user domain.User
-	err = serv.db.Collection("users").FindOne(ctx, bson.M{"email": req.Email}).Decode(&user)
+	errInvalidCredentials := exception.NewBadRequestError(
+		web.ResponseErrors{"email": web.ResponseError{Message: "Invalid email or password"}},
+	)
 
+	email, err := serv.repo.EmailRepository.FindPrimaryByEmail(ctx, req.Email)
 	if err != nil {
-		if err != mongo.ErrNoDocuments {
-			helper.PanicIfError(err)
-		}
+		panic(errInvalidCredentials)
 	}
 
-	if user.ID == primitive.NilObjectID {
-		panic(exception.NewBadRequestError(
-			web.ResponseErrors{"email": web.ResponseError{Message: "Invalid email or password"}},
-		))
+	user, err := serv.repo.UserRepository.FindById(ctx, email.UserID)
+	if err != nil {
+		panic(errInvalidCredentials)
 	}
 
 	if validPwd := helper.CheckPasswordHash(req.Password, user.Password); !validPwd {
-		panic(exception.NewBadRequestError(
-			web.ResponseErrors{"email": web.ResponseError{Message: "Invalid email or password"}},
-		))
+		panic(errInvalidCredentials)
 	}
 
 	accessToken := helper.GenerateAccessToken(user)
 	refreshToken := helper.GenerateRefreshToken(user)
 
 	return web.LoginResponse{
-		User:         user,
+		User: web.UserDetailResponse{
+			ID:           user.ID,
+			Name:         user.Name,
+			Email:        email.Email,
+			IsVerified:   email.VerifiedAt.Valid,
+			ProfilePhoto: user.ProfilePhoto,
+			CreatedAt:    user.CreatedAt,
+			UpdatedAt:    user.UpdatedAt,
+		},
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}

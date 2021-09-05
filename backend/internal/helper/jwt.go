@@ -8,18 +8,17 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type JwtPayload struct {
-	ID   primitive.ObjectID
+	ID   string
 	Kind string
 	Exp  float64
 }
 
 func GenerateAccessToken(user domain.User) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"_id":  user.ID.Hex(),
+		"id":   user.ID,
 		"kind": "access",
 		"exp":  float64(time.Now().Add(config.ACCESS_TOKEN_LIFETIME).Unix()),
 	})
@@ -32,7 +31,7 @@ func GenerateAccessToken(user domain.User) string {
 
 func GenerateRefreshToken(user domain.User) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"_id":  user.ID.Hex(),
+		"id":   user.ID,
 		"kind": "refresh",
 		"exp":  float64(time.Now().Add(config.REFRESH_TOKEN_LIFETIME).Unix()),
 	})
@@ -57,11 +56,8 @@ func Verify(token string) (JwtPayload, error) {
 	}
 
 	if claims, ok := jwtToken.Claims.(jwt.MapClaims); ok && jwtToken.Valid {
-		id, err := primitive.ObjectIDFromHex(claims["_id"].(string))
-		PanicIfError(err)
-
 		return JwtPayload{
-			ID:   id,
+			ID:   claims["id"].(string),
 			Kind: claims["kind"].(string),
 			Exp:  claims["exp"].(float64),
 		}, nil

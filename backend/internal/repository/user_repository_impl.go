@@ -2,31 +2,31 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"finaway/internal/helper"
 	"finaway/internal/model/domain"
 	"fmt"
 
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 type userRepository struct {
-	db *mongo.Database
+	db *gorm.DB
 }
 
-func NewUserRepository(db *mongo.Database) UserRepository {
+func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userRepository{db: db}
 }
 
-func (repo *userRepository) FindOneById(ctx context.Context, id primitive.ObjectID) (domain.User, error) {
+func (repo *userRepository) FindById(ctx context.Context, id string) (domain.User, error) {
 	user := domain.User{}
 
-	err := repo.db.Collection("users").FindOne(ctx, bson.M{"_id": id}).Decode(&user)
-	if err != nil && err == mongo.ErrNoDocuments {
-		return user, fmt.Errorf("user with id %s not found", id.Hex())
+	err := repo.db.WithContext(ctx).Where("id = ?", id).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return user, fmt.Errorf("user with id %s not found", id)
+	} else {
+		helper.PanicIfError(err)
 	}
-	helper.PanicIfError(err)
 
 	return user, nil
 }

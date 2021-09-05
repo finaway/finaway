@@ -1,0 +1,74 @@
+[
+  {
+    "id": "13868791-5ff5-4dd8-b25a-612344161a4d",
+    "user_id": "04e61888-383c-4b2a-a606-4b76ccbcb0e3",
+    "email": "agusstiawan@test.com",
+    "is_primary": true,
+    "verified_at": 1630765833,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "6d2802cb-3dcb-4c21-aa27-79d4f36ad1a1",
+    "user_id": "bda5b6d3-f2c6-464a-8498-0300be1a4194",
+    "email": "johndoe@test.com",
+    "is_primary": true,
+    "verified_at": 1630765833,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "0118b1b1-9554-4194-ba93-89930f30c3f1",
+    "user_id": "79c538b1-0dce-4e05-b8b1-a03d27b59f3a",
+    "email": "janedoe@test.com",
+    "is_primary": true,
+    "verified_at": 1630765833,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "67c67ecc-4f30-4578-be36-c96ace0cd45f",
+    "user_id": "366b9655-03bd-4c4a-88a2-70f2aeb6f2fb",
+    "email": "loremipsum@test.com",
+    "is_primary": true,
+    "verified_at": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "a096a3b6-cbe2-4e03-a20e-cf3b78e6f44f",
+    "user_id": "2f0bf791-8ba2-4183-8a9d-dd00a173c2d2",
+    "email": "dolorsit@test.com",
+    "is_primary": true,
+    "verified_at": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "f1cfdd1b-d772-4e59-9aba-39a5efca1dfa",
+    "user_id": "04e61888-383c-4b2a-a606-4b76ccbcb0e3",
+    "email": "agusstiawan2@test.com",
+    "is_primary": false,
+    "verified_at": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "00890426-d203-490d-a0ee-3ade02b5035e",
+    "user_id": "bda5b6d3-f2c6-464a-8498-0300be1a4194",
+    "email": "johndoe2@test.com",
+    "is_primary": false,
+    "verified_at": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  },
+  {
+    "id": "1af51739-b240-42be-b8c0-90856cdac33d",
+    "user_id": "79c538b1-0dce-4e05-b8b1-a03d27b59f3a",
+    "email": "janedoe2@test.com",
+    "is_primary": false,
+    "verified_at": null,
+    "created_at": 1630765833,
+    "updated_at": 1630765833
+  }
+]

@@ -1,65 +1,37 @@
 package helpertest
 
 import (
-	"context"
 	"finaway/config"
 	"finaway/internal/app"
 	"finaway/internal/controller"
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/internal/service"
-	"finaway/test/datatest"
-	"os"
 	"path/filepath"
-	"regexp"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 // Setup env for test
 func init() {
-	pattern := regexp.MustCompile(`(.*?)backend\/`)
-
-	dir, err := os.Getwd()
-	helper.PanicIfError(err)
-
-	testDir := pattern.FindString(dir)
-	config.Init(filepath.Join(testDir, ".env.test"))
+	config.Init(filepath.Join(GetMainDir(), ".env.test"))
 }
 
-func SetupTest() (*mongo.Database, *fiber.App) {
+func SetupTest() (*gorm.DB, *fiber.App) {
 	db := NewTestDB()
-
-	collections, err := db.ListCollectionNames(context.Background(), bson.D{})
-	helper.PanicIfError(err)
-
-	// Drop all collections
-	for _, collection := range collections {
-		db.Collection(collection).Drop(context.Background())
-	}
-
-	datatest.Migrate(db)
+	app.MigrateModels(db)
+	MigrateDataTests(db)
 
 	validate := validator.New()
 	helper.InjectValidate(validate)
 
-	userRepo := repository.NewUserRepository(db)
+	repo := repository.New(db)
+	serv := service.New(db, validate, repo)
+	ctrl := controller.New(serv)
 
-	authService := service.NewAuthService(db, validate, userRepo)
-	profileService := service.NewProfileService(db, validate, userRepo)
-
-	authController := controller.NewAuthController(authService)
-	profileController := controller.NewProfileController(profileService)
-
-	controllers := app.Controller{
-		AuthController:    authController,
-		ProfileController: profileController,
-	}
-
-	router := app.NewRouter(controllers)
+	router := app.NewRouter(ctrl)
 
 	return db, router
 }

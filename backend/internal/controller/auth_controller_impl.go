@@ -10,21 +10,21 @@ import (
 )
 
 type authController struct {
-	authService service.AuthService
+	serv service.AuthService
 }
 
-func NewAuthController(authService service.AuthService) AuthController {
+func NewAuthController(authServ service.AuthService) AuthController {
 	return &authController{
-		authService: authService,
+		serv: authServ,
 	}
 }
 
-func (controller authController) Login(c *fiber.Ctx) error {
+func (ctrl *authController) Login(c *fiber.Ctx) error {
 	req := web.LoginRequest{}
 	err := c.BodyParser(&req)
 	helper.PanicIfError(err)
 
-	data := controller.authService.Login(c.Context(), req)
+	data := ctrl.serv.Login(c.Context(), req)
 	resp := web.WebResponse{
 		Code:   http.StatusOK,
 		Data:   data,
@@ -32,11 +32,4 @@ func (controller authController) Login(c *fiber.Ctx) error {
 	}
 
 	return resp.JSON(c)
-}
-
-func (controller authController) Signup(c *fiber.Ctx) error {
-	return c.Status(http.StatusCreated).JSON(map[string]interface{}{
-		"code":   http.StatusCreated,
-		"status": http.StatusText(http.StatusCreated),
-	})
 }

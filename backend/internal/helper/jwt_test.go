@@ -5,13 +5,13 @@ import (
 	"finaway/internal/model/domain"
 	"testing"
 
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func TestJwt(t *testing.T) {
-	user1 := domain.User{ID: primitive.NewObjectID()}
-	user2 := domain.User{ID: primitive.NewObjectID()}
+	user1 := domain.User{ID: uuid.NewString()}
+	user2 := domain.User{ID: uuid.NewString()}
 
 	accessToken1 := helper.GenerateAccessToken(user1)
 	accessToken2 := helper.GenerateAccessToken(user2)

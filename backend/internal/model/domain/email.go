@@ -1,12 +1,23 @@
 package domain
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"finaway/internal/helper/sqlhelper"
+
+	"github.com/google/uuid"
+)
 
 type Email struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty"`
-	UserID     primitive.ObjectID `bson:"user_id,omitempty"`
-	Email      string             `bson:"email,omitempty"`
-	VerifiedAt primitive.DateTime `bson:"verified_at,omitempty"`
-	IsVerified bool               `bson:"is_verified,omitempty"`
-	IsPrimary  bool               `bson:"is_primary,omitempty"`
+	ID         string              `json:"id" yaml:"id" gorm:"type:char(36);primaryKey;not null"`
+	UserID     string              `json:"user_id" yaml:"user_id" gorm:"type:char(36);not null"`
+	Email      string              `json:"email" yaml:"email" gorm:"type:varchar(255);uniqueIndex;not null"`
+	IsPrimary  bool                `json:"is_primary" yaml:"is_primary" gorm:"type:boolean;not null;default:false"`
+	VerifiedAt sqlhelper.NullInt32 `json:"verified_at,omitempty" yaml:"verified_at" gorm:"type:int(10)"`
+	CreatedAt  uint32              `json:"created_at" yaml:"created_at" gorm:"autoCreateTime"`
+	UpdatedAt  uint32              `json:"updated_at" yaml:"updated_at" gorm:"autoUpdateTime"`
+}
+
+func NewEmail() Email {
+	return Email{
+		ID: uuid.New().String(),
+	}
 }

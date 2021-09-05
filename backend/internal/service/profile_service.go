@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"finaway/internal/model/domain"
+	"finaway/internal/model/web"
 )
 
 type ProfileService interface {
-	Me(ctx context.Context, user domain.User) domain.User
+	Me(ctx context.Context, userID string) web.ProfileDetailResponse
 }
