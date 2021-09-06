@@ -641,7 +641,7 @@
         "tags": [
           "Authorization"
         ],
-        "summary": "Generate new access token",
+        "summary": "Blacklist refresh token",
         "requestBody": {
           "content": {
             "application/json": {
@@ -677,13 +677,7 @@
                       "default": "Ok"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "access_token": {
-                          "type": "string",
-                          "example": "eyXxx.eyXxx.xxx"
-                        }
-                      }
+                      "default": "null"
                     },
                     "errors": {
                       "default": null
