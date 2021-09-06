@@ -45,6 +45,7 @@ func MigrateModels(db *gorm.DB) {
 	err := db.AutoMigrate(
 		&domain.User{},
 		&domain.Email{},
+		&domain.BlacklistedToken{},
 	)
 	helper.PanicIfError(err)
 }

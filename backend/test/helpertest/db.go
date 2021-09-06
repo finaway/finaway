@@ -12,6 +12,7 @@ import (
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func createTestDB(dbName string) {
@@ -55,7 +56,9 @@ func NewTestDB() *gorm.DB {
 		DB_NAME,
 	)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 	helper.PanicIfError(err)
 
 	return db

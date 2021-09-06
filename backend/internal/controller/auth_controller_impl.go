@@ -33,3 +33,18 @@ func (ctrl *authController) Login(c *fiber.Ctx) error {
 
 	return resp.JSON(c)
 }
+
+func (ctrl *authController) Logout(c *fiber.Ctx) error {
+	req := web.LogoutRequest{}
+	err := c.BodyParser(&req)
+	helper.PanicIfError(err)
+
+	data := ctrl.serv.Logout(c.Context(), req)
+	resp := web.WebResponse{
+		Code:   http.StatusOK,
+		Data:   data,
+		Errors: nil,
+	}
+
+	return resp.JSON(c)
+}

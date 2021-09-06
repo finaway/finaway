@@ -4,6 +4,7 @@ import (
 	"context"
 	"finaway/internal/exception"
 	"finaway/internal/helper"
+	"finaway/internal/model/domain"
 	"finaway/internal/model/web"
 	"finaway/internal/repository"
 
@@ -63,4 +64,25 @@ func (serv *authService) Login(ctx context.Context, req web.LoginRequest) web.Lo
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}
+}
+
+func (serv *authService) Logout(ctx context.Context, req web.LogoutRequest) web.LogoutResponse {
+	err := serv.validate.Struct(req)
+	helper.PanicIfError(err)
+
+	_, err = helper.Verify(req.RefreshToken)
+
+	// Ignore invalid token & token expiration
+	if err != nil {
+		return web.LogoutResponse{}
+	}
+
+	_, err = serv.repo.BlacklistedTokenRepository.FindByToken(ctx, req.RefreshToken)
+
+	// If record not found
+	if err == nil {
+		serv.repo.BlacklistedTokenRepository.Save(ctx, serv.db, domain.BlacklistedToken{Token: req.RefreshToken})
+	}
+
+	return web.LogoutResponse{}
 }
