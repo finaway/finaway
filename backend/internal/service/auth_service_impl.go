@@ -86,3 +86,36 @@ func (serv *authService) Logout(ctx context.Context, req web.LogoutRequest) web.
 
 	return web.LogoutResponse{}
 }
+
+func (serv *authService) RefreshToken(ctx context.Context, req web.RefreshTokenRequest) web.RefreshTokenResponse {
+	err := serv.validate.Struct(req)
+	helper.PanicIfError(err)
+
+	invalidRefreshToken := exception.NewBadRequestError(
+		web.ResponseErrors{"refresh_token": web.ResponseError{Message: "Invalid refresh token"}},
+	)
+
+	payload, err := helper.Verify(req.RefreshToken)
+	if err != nil || !helper.IsRefreshToken(payload) {
+		panic(invalidRefreshToken)
+	}
+
+	// TODO: optimize this query
+	user, err := serv.repo.UserRepository.FindById(ctx, payload.ID)
+	if err != nil {
+		panic(invalidRefreshToken)
+	}
+
+	// TODO: optimize this query
+	_, err = serv.repo.BlacklistedTokenRepository.FindByToken(ctx, req.RefreshToken)
+	// Refresh token should not be blacklisted
+	if err == nil {
+		panic(invalidRefreshToken)
+	}
+
+	newAccessToken := helper.GenerateAccessToken(user)
+
+	return web.RefreshTokenResponse{
+		AccessToken: newAccessToken,
+	}
+}

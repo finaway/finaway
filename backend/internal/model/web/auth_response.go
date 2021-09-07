@@ -7,3 +7,7 @@ type LoginResponse struct {
 }
 
 type LogoutResponse struct{}
+
+type RefreshTokenResponse struct {
+	AccessToken string `json:"access_token"`
+}

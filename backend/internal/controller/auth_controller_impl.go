@@ -26,9 +26,8 @@ func (ctrl *authController) Login(c *fiber.Ctx) error {
 
 	data := ctrl.serv.Login(c.Context(), req)
 	resp := web.WebResponse{
-		Code:   http.StatusOK,
-		Data:   data,
-		Errors: nil,
+		Code: http.StatusOK,
+		Data: data,
 	}
 
 	return resp.JSON(c)
@@ -41,9 +40,22 @@ func (ctrl *authController) Logout(c *fiber.Ctx) error {
 
 	data := ctrl.serv.Logout(c.Context(), req)
 	resp := web.WebResponse{
-		Code:   http.StatusOK,
-		Data:   data,
-		Errors: nil,
+		Code: http.StatusOK,
+		Data: data,
+	}
+
+	return resp.JSON(c)
+}
+
+func (ctrl *authController) RefreshToken(c *fiber.Ctx) error {
+	req := web.RefreshTokenRequest{}
+	err := c.BodyParser(&req)
+	helper.PanicIfError(err)
+
+	data := ctrl.serv.RefreshToken(c.Context(), req)
+	resp := web.WebResponse{
+		Code: http.StatusOK,
+		Data: data,
 	}
 
 	return resp.JSON(c)
