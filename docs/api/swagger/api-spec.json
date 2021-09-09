@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://finaway.id/api/v1"
+      "url": "https://finaway.id"
     }
   ],
   "paths": {
@@ -172,87 +172,6 @@
                           "$ref": "#/components/schemas/ValidationError"
                         },
                         "password": {
-                          "$ref": "#/components/schemas/ValidationError"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "429": {
-            "$ref": "#/components/schemas/ResponseTooManyRequest"
-          }
-        }
-      }
-    },
-    "/auth/activate/{token}": {
-      "get": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Account activation",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "token",
-            "description": "Account activation token that have been sent by email",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Account activation success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "number",
-                      "default": 200
-                    },
-                    "status": {
-                      "type": "string",
-                      "default": "Ok"
-                    },
-                    "data": {
-                      "default": null
-                    },
-                    "errors": {
-                      "default": null
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "code": {
-                      "type": "number",
-                      "default": 400
-                    },
-                    "status": {
-                      "type": "string",
-                      "default": "BadRequest"
-                    },
-                    "data": {
-                      "default": null
-                    },
-                    "errors": {
-                      "type": "object",
-                      "properties": {
-                        "token": {
                           "$ref": "#/components/schemas/ValidationError"
                         }
                       }
@@ -433,6 +352,9 @@
                       "properties": {
                         "email": {
                           "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "token": {
+                          "$ref": "#/components/schemas/ValidationError"
                         }
                       }
                     }
@@ -531,6 +453,9 @@
                       "properties": {
                         "password": {
                           "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "token": {
+                          "$ref": "#/components/schemas/ValidationError"
                         }
                       }
                     }
@@ -545,7 +470,7 @@
         }
       }
     },
-    "/auth/refresh": {
+    "/auth/refresh-token": {
       "post": {
         "tags": [
           "Authorization"
@@ -1027,6 +952,10 @@
           "password": {
             "type": "string",
             "writeOnly": true
+          },
+          "profile_photo": {
+            "type": "string",
+            "example": null
           },
           "is_verified": {
             "type": "boolean",
