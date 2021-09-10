@@ -17,9 +17,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogin_Successful(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestLogin_ValidCredentials(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	wg := sync.WaitGroup{}
 	users := datatest.GetUsers()
@@ -45,7 +45,7 @@ func TestLogin_Successful(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/api/auth/login", body)
 				request.Header.Add("Content-Type", "application/json")
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
@@ -76,8 +76,8 @@ func TestLogin_Successful(t *testing.T) {
 }
 
 func TestLogin_ValidationError(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	user := datatest.GetUsers()[0]
 	var primaryEmail string
@@ -143,7 +143,7 @@ func TestLogin_ValidationError(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/api/auth/login", body)
 				request.Header.Add("Content-Type", "application/json")
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)

@@ -14,9 +14,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAuthLogout_Success(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestAuthLogout_CorrectToken(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	user := datatest.GetUsers()[0]
 
@@ -50,7 +50,7 @@ func TestAuthLogout_Success(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/api/auth/logout", body)
 				request.Header.Add("Content-Type", "application/json")
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				assert.Equal(t, http.StatusOK, resp.StatusCode)
@@ -61,9 +61,9 @@ func TestAuthLogout_Success(t *testing.T) {
 	wg.Wait()
 }
 
-func TestAuthLogout_Failure(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestAuthLogout_IncorrectToken(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	tests := []struct {
 		name  string
@@ -90,7 +90,7 @@ func TestAuthLogout_Failure(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/api/auth/logout", body)
 				request.Header.Add("Content-Type", "application/json")
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)

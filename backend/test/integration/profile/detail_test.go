@@ -14,9 +14,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestProfileDetail_Successful(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestProfileDetail_CorrectToken(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	wg := sync.WaitGroup{}
 	users := datatest.GetUsers()
@@ -41,7 +41,7 @@ func TestProfileDetail_Successful(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 				request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", jwt.AccessToken))
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
@@ -63,13 +63,13 @@ func TestProfileDetail_Successful(t *testing.T) {
 }
 
 func TestProfileDetail_Unauthorized(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	request := httptest.NewRequest(http.MethodGet, "/api/profile", nil)
 	request.Header.Add("Content-Type", "application/json")
 
-	resp, err := router.Test(request)
+	resp, err := testutil.Router.Test(request)
 	errorutil.PanicIfError(err)
 
 	webResp := helpertest.ReadBody(resp)

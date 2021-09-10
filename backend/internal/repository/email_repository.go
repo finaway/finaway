@@ -7,6 +7,7 @@ import (
 	"finaway/internal/util/errorutil"
 	"fmt"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -16,6 +17,14 @@ type EmailRepository struct {
 
 func NewEmailRepository(db *gorm.DB) *EmailRepository {
 	return &EmailRepository{db}
+}
+
+func (rp *EmailRepository) Save(ctx context.Context, tx *gorm.DB, e domain.Email) domain.Email {
+	e.ID = uuid.NewString()
+	err := tx.WithContext(ctx).Create(&e).Error
+	errorutil.PanicIfError(err)
+
+	return e
 }
 
 func (rp *EmailRepository) FindPrimaryByUserID(ctx context.Context, id string) (domain.Email, error) {
@@ -35,7 +44,6 @@ func (r *EmailRepository) FindPrimaryByEmail(ctx context.Context, e string) (dom
 	var em domain.Email
 
 	err := r.db.WithContext(ctx).Where("email = ? and is_primary = true", e).First(&em).Error
-
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return em, fmt.Errorf("email %s not found", e)
 	} else {

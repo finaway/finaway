@@ -2,13 +2,16 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"finaway/internal/exception"
 	"finaway/internal/model/domain"
 	"finaway/internal/model/web"
 	"finaway/internal/repository"
 	"finaway/internal/util/errorutil"
+	"finaway/internal/util/hash"
 	"finaway/internal/util/jwtutil"
-	"finaway/internal/util/password"
+	"finaway/internal/util/mailer"
+	"finaway/internal/util/sqlutil"
 
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
@@ -17,13 +20,15 @@ import (
 type AuthService struct {
 	db *gorm.DB
 	v  *validator.Validate
+	m  mailer.IMailer
 	rp *repository.Repository
 }
 
-func NewAuthService(db *gorm.DB, v *validator.Validate, rp *repository.Repository) *AuthService {
+func NewAuthService(db *gorm.DB, v *validator.Validate, m mailer.IMailer, rp *repository.Repository) *AuthService {
 	return &AuthService{
 		db: db,
 		v:  v,
+		m:  m,
 		rp: rp,
 	}
 }
@@ -46,7 +51,7 @@ func (sv *AuthService) Login(ctx context.Context, r web.LoginRequest) web.LoginR
 		panic(errInvalidCredentials)
 	}
 
-	if validPwd := password.CheckHash(r.Password, u.Password); !validPwd {
+	if validPwd := hash.CheckPasswordHash(r.Password, u.Password); !validPwd {
 		panic(errInvalidCredentials)
 	}
 
@@ -54,6 +59,62 @@ func (sv *AuthService) Login(ctx context.Context, r web.LoginRequest) web.LoginR
 	refreshToken := jwtutil.GenerateRefreshToken(u.ID)
 
 	return web.LoginResponse{
+		User: web.UserDetailResponse{
+			ID:           u.ID,
+			Name:         u.Name,
+			Email:        e.Email,
+			IsVerified:   e.VerifiedAt.Valid,
+			ProfilePhoto: u.ProfilePhoto,
+			CreatedAt:    u.CreatedAt,
+			UpdatedAt:    u.UpdatedAt,
+		},
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+}
+
+func (sv *AuthService) Signup(ctx context.Context, r web.SignupRequest) web.SignupResponse {
+	err := sv.v.Struct(r)
+	errorutil.PanicIfError(err)
+
+	_, err = sv.rp.EmailRepository.FindPrimaryByEmail(ctx, r.Email)
+	if err == nil {
+		panic(exception.BadRequestError{
+			Errors: web.ResponseErrors{
+				"email": web.ResponseError{Message: "Email already taken by another user"},
+			},
+		})
+	}
+
+	tx := sv.db.Begin()
+	defer sqlutil.CommitOrRollback(tx)
+
+	pw, err := hash.HashPassword(r.Password)
+	errorutil.PanicIfError(err)
+
+	u := domain.User{Name: r.Name, Password: pw}
+	u = sv.rp.UserRepository.Save(ctx, tx, u)
+
+	e := domain.Email{
+		UserID:    u.ID,
+		Email:     r.Email,
+		IsPrimary: true,
+		Token:     sql.NullString{String: hash.GenerateEmailConfirmationToken(), Valid: true},
+	}
+	e = sv.rp.EmailRepository.Save(ctx, tx, e)
+
+	accessToken := jwtutil.GenerateAccessToken(u.ID)
+	refreshToken := jwtutil.GenerateRefreshToken(u.ID)
+
+	confirmEmail := mailer.EmailConfirmationSender{
+		To:    e.Email,
+		Name:  u.Name,
+		Token: e.Token.String,
+	}
+
+	sv.m.Send(&confirmEmail)
+
+	return web.SignupResponse{
 		User: web.UserDetailResponse{
 			ID:           u.ID,
 			Name:         u.Name,
@@ -89,15 +150,15 @@ func (sv *AuthService) Logout(ctx context.Context, r web.LogoutRequest) web.Logo
 	return web.LogoutResponse{}
 }
 
-func (sv *AuthService) RefreshToken(ctx context.Context, req web.RefreshTokenRequest) web.RefreshTokenResponse {
-	err := sv.v.Struct(req)
+func (sv *AuthService) RefreshToken(ctx context.Context, r web.RefreshTokenRequest) web.RefreshTokenResponse {
+	err := sv.v.Struct(r)
 	errorutil.PanicIfError(err)
 
 	errInvalidRefreshToken := exception.NewBadRequestError(
 		web.ResponseErrors{"refresh_token": web.ResponseError{Message: "Invalid refresh token"}},
 	)
 
-	p, err := jwtutil.Verify(req.RefreshToken)
+	p, err := jwtutil.Verify(r.RefreshToken)
 	if err != nil || !p.IsRefreshToken() {
 		panic(errInvalidRefreshToken)
 	}
@@ -109,7 +170,7 @@ func (sv *AuthService) RefreshToken(ctx context.Context, req web.RefreshTokenReq
 	}
 
 	// TODO: optimize this query
-	_, err = sv.rp.BlacklistedTokenRepository.FindByToken(ctx, req.RefreshToken)
+	_, err = sv.rp.BlacklistedTokenRepository.FindByToken(ctx, r.RefreshToken)
 	// Refresh token should not be blacklisted
 	if err == nil {
 		panic(errInvalidRefreshToken)

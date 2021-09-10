@@ -15,9 +15,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRefreshToken_Success(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestRefreshToken_CorrectToken(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	user := datatest.GetUsers()[0]
 	token := helpertest.GenerateJwt(user.ID)
@@ -29,7 +29,7 @@ func TestRefreshToken_Success(t *testing.T) {
 	request := httptest.NewRequest(http.MethodPost, "/api/auth/refresh-token", body)
 	request.Header.Add("Content-Type", "application/json")
 
-	resp, err := router.Test(request)
+	resp, err := testutil.Router.Test(request)
 	errorutil.PanicIfError(err)
 
 	webResp := helpertest.ReadBody(resp)
@@ -38,16 +38,16 @@ func TestRefreshToken_Success(t *testing.T) {
 	assert.Contains(t, webResp.Data, "access_token")
 }
 
-func TestRefreshToken_Fail(t *testing.T) {
-	db, router := helpertest.SetupTest()
-	defer helpertest.Cleanup(db)
+func TestRefreshToken_IncorrectToken(t *testing.T) {
+	testutil := helpertest.New()
+	defer testutil.Cleanup()
 
 	user := datatest.GetUsers()[0]
 	token := helpertest.GenerateJwt(user.ID)
 	expiredToken := helpertest.GenerateExpiredJwt(user.ID)
 
 	blacklistedToken := domain.BlacklistedToken{Token: helpertest.GenerateJwt(user.ID).RefreshToken}
-	err := db.Create(&blacklistedToken).Error
+	err := testutil.DB.Create(&blacklistedToken).Error
 	errorutil.PanicIfError(err)
 
 	tests := []struct {
@@ -82,7 +82,7 @@ func TestRefreshToken_Fail(t *testing.T) {
 				request := httptest.NewRequest(http.MethodPost, "/api/auth/refresh-token", body)
 				request.Header.Add("Content-Type", "application/json")
 
-				resp, err := router.Test(request)
+				resp, err := testutil.Router.Test(request)
 				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)

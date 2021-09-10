@@ -6,6 +6,7 @@ import (
 	"finaway/internal/model/domain"
 	"finaway/internal/model/web"
 	"finaway/internal/repository"
+	"finaway/internal/util/mailer"
 
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
@@ -14,13 +15,15 @@ import (
 type ProfileService struct {
 	db *gorm.DB
 	v  *validator.Validate
+	m  mailer.IMailer
 	rp *repository.Repository
 }
 
-func NewProfileService(db *gorm.DB, v *validator.Validate, rp *repository.Repository) *ProfileService {
+func NewProfileService(db *gorm.DB, v *validator.Validate, m mailer.IMailer, rp *repository.Repository) *ProfileService {
 	return &ProfileService{
 		db: db,
 		v:  v,
+		m:  m,
 		rp: rp,
 	}
 }

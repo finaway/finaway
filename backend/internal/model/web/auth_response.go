@@ -6,6 +6,12 @@ type LoginResponse struct {
 	RefreshToken string             `json:"refresh_token"`
 }
 
+type SignupResponse struct {
+	User         UserDetailResponse `json:"user"`
+	AccessToken  string             `json:"access_token"`
+	RefreshToken string             `json:"refresh_token"`
+}
+
 type LogoutResponse struct{}
 
 type RefreshTokenResponse struct {

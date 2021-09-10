@@ -17,6 +17,7 @@ func NewRouter(c *controller.Controller) *fiber.App {
 	app.Use(recover.New())
 
 	app.Post("/api/auth/login", c.AuthController.Login)
+	app.Post("/api/auth/signup", c.AuthController.Signup)
 	app.Post("/api/auth/logout", c.AuthController.Logout)
 	app.Post("/api/auth/refresh-token", c.AuthController.RefreshToken)
 

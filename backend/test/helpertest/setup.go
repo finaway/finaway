@@ -7,6 +7,7 @@ import (
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/internal/service"
+	"finaway/internal/util/mailer"
 	"path/filepath"
 
 	"github.com/go-playground/validator/v10"
@@ -19,19 +20,36 @@ func init() {
 	config.Init(filepath.Join(GetMainDir(), ".env.test"))
 }
 
-func SetupTest() (*gorm.DB, *fiber.App) {
+type TestUtil struct {
+	DB     *gorm.DB
+	Router *fiber.App
+	Mailer *mailer.MailerMock
+}
+
+func New() *TestUtil {
 	db := NewTestDB()
 	app.MigrateModels(db)
 	MigrateDataTests(db)
 
-	validate := validator.New()
-	helper.InjectValidate(validate)
+	v := validator.New()
+	helper.InjectValidate(v)
 
-	repo := repository.New(db)
-	serv := service.New(db, validate, repo)
-	ctrl := controller.New(serv)
+	m := mailer.NewMock()
 
-	router := app.NewRouter(ctrl)
+	rp := repository.New(db)
+	sv := service.New(db, v, m, rp)
+	ctrl := controller.New(sv)
 
-	return db, router
+	r := app.NewRouter(ctrl)
+
+	return &TestUtil{
+		DB:     db,
+		Router: r,
+		Mailer: m,
+	}
+}
+
+func (t *TestUtil) Cleanup() {
+	defer app.DisconnectDB(t.DB)
+	dropTestDB(t.DB.Migrator().CurrentDatabase())
 }
