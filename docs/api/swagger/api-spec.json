@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://finaway.id"
+      "url": "http://localhost:3000/api"
     }
   ],
   "paths": {
@@ -115,7 +115,27 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 50,
+                    "example": "John Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 255,
+                    "example": "johndoe@mail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 30,
+                    "example": "johndoe@mail.com"
+                  }
+                }
               }
             }
           }
@@ -689,6 +709,11 @@
           "Profile"
         ],
         "summary": "Get current logged in user data",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Get profile success",
