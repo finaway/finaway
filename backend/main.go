@@ -7,8 +7,11 @@ import (
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/internal/service"
+	"finaway/internal/util/errorutil"
+	"finaway/internal/util/mailer"
 
 	"github.com/go-playground/validator/v10"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func init() {
@@ -18,24 +21,18 @@ func init() {
 func main() {
 	db := app.NewDB()
 	defer app.DisconnectDB(db)
+	app.MigrateModels(db)
 
-	validate := validator.New()
-	helper.InjectValidate(validate)
+	v := validator.New()
+	helper.InjectValidate(v)
 
-	userRepo := repository.NewUserRepository(db)
+	m := mailer.New()
 
-	authService := service.NewAuthService(db, validate, userRepo)
-	profileService := service.NewProfileService(db, validate, userRepo)
+	rp := repository.New(db)
+	sv := service.New(db, v, m, rp)
+	ct := controller.New(sv)
 
-	authController := controller.NewAuthController(authService)
-	profileController := controller.NewProfileController(profileService)
-
-	controllers := app.Controller{
-		AuthController:    authController,
-		ProfileController: profileController,
-	}
-
-	router := app.NewRouter(controllers)
-	err := router.Listen(":3000")
-	helper.PanicIfError(err)
+	r := app.NewRouter(ct)
+	err := r.Listen(":3000")
+	errorutil.PanicIfError(err)
 }

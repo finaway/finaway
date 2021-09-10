@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"finaway/internal/exception"
-	"finaway/internal/helper"
+	"finaway/internal/util/jwtutil"
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,13 +20,13 @@ func Auth(cb FiberHandler) FiberHandler {
 		}
 
 		accessToken := tokenSegments[1]
-		payload, err := helper.Verify(accessToken)
+		payload, err := jwtutil.Verify(accessToken)
 
-		if err != nil {
+		if err != nil || !payload.IsAccessToken() {
 			panic(exception.NewUnauthorizedError("Unauthorized"))
 		}
 
-		c.Locals("userID", payload.ID)
+		c.Locals("userID", payload.UserID)
 
 		return cb(c)
 	}

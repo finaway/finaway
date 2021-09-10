@@ -31,16 +31,16 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 
 // Error that produce by validator library
 func validatorError(c *fiber.Ctx, err validator.ValidationErrors) error {
-	errors := web.ResponseErrors{}
+	errs := web.ResponseErrors{}
 
 	for _, err := range err {
-		errors[err.Field()] = web.ResponseError{Message: err.Error()}
+		errs[err.Field()] = web.ResponseError{Message: err.Error()}
 	}
 
 	resp := web.WebResponse{
 		Code:   http.StatusBadRequest,
 		Data:   nil,
-		Errors: errors,
+		Errors: errs,
 	}
 
 	return resp.JSON(c)
