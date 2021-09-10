@@ -2,8 +2,9 @@ package auth_test
 
 import (
 	"encoding/json"
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
+	"finaway/internal/util/errorutil"
+	"finaway/internal/util/jwtutil"
 	"finaway/test/datatest"
 	"finaway/test/helpertest"
 	"fmt"
@@ -45,7 +46,7 @@ func TestLogin_Successful(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
 
@@ -59,14 +60,14 @@ func TestLogin_Successful(t *testing.T) {
 				accessToken := webResp.Data.(map[string]interface{})["access_token"].(string)
 				refreshToken := webResp.Data.(map[string]interface{})["refresh_token"].(string)
 
-				accessTokenPayload, _ := helper.Verify(accessToken)
-				refreshTokenPayload, _ := helper.Verify(refreshToken)
+				accessTokenPayload, _ := jwtutil.Verify(accessToken)
+				refreshTokenPayload, _ := jwtutil.Verify(refreshToken)
 
-				assert.True(t, helper.IsAccessToken(accessTokenPayload))
-				assert.True(t, helper.IsRefreshToken(refreshTokenPayload))
+				assert.True(t, accessTokenPayload.IsAccessToken())
+				assert.True(t, refreshTokenPayload.IsRefreshToken())
 
-				assert.Equal(t, user.ID, accessTokenPayload.ID)
-				assert.Equal(t, user.ID, refreshTokenPayload.ID)
+				assert.Equal(t, user.ID, accessTokenPayload.UserID)
+				assert.Equal(t, user.ID, refreshTokenPayload.UserID)
 			})
 		}(t, user)
 	}
@@ -143,7 +144,7 @@ func TestLogin_ValidationError(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
 

@@ -2,8 +2,8 @@ package app
 
 import (
 	"finaway/config"
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
+	"finaway/internal/util/errorutil"
 	"fmt"
 	"time"
 
@@ -22,23 +22,23 @@ func NewDB() *gorm.DB {
 	)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
-	sqlDB, err := db.DB()
-	helper.PanicIfError(err)
+	sql, err := db.DB()
+	errorutil.PanicIfError(err)
 
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(100)
-	sqlDB.SetConnMaxLifetime(time.Hour)
+	sql.SetMaxIdleConns(10)
+	sql.SetMaxOpenConns(100)
+	sql.SetConnMaxLifetime(time.Hour)
 
 	return db
 }
 
 func DisconnectDB(db *gorm.DB) {
-	sqlDB, err := db.DB()
-	helper.PanicIfError(err)
+	sql, err := db.DB()
+	errorutil.PanicIfError(err)
 
-	sqlDB.Close()
+	sql.Close()
 }
 
 func MigrateModels(db *gorm.DB) {
@@ -47,5 +47,5 @@ func MigrateModels(db *gorm.DB) {
 		&domain.Email{},
 		&domain.BlacklistedToken{},
 	)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 }

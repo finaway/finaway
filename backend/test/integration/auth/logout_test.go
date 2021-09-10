@@ -2,7 +2,7 @@ package auth_test
 
 import (
 	"encoding/json"
-	"finaway/internal/helper"
+	"finaway/internal/util/errorutil"
 	"finaway/test/datatest"
 	"finaway/test/helpertest"
 	"net/http"
@@ -20,8 +20,8 @@ func TestAuthLogout_Success(t *testing.T) {
 
 	user := datatest.GetUsers()[0]
 
-	token := helpertest.GenerateJwt(user)
-	expiredToken := helpertest.GenerateExpiredJwt(user)
+	token := helpertest.GenerateJwt(user.ID)
+	expiredToken := helpertest.GenerateExpiredJwt(user.ID)
 
 	tests := []struct {
 		name  string
@@ -51,7 +51,7 @@ func TestAuthLogout_Success(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				assert.Equal(t, http.StatusOK, resp.StatusCode)
 			})
@@ -91,7 +91,7 @@ func TestAuthLogout_Failure(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
 

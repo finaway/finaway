@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/joho/godotenv"
 )
 
@@ -15,9 +16,10 @@ var (
 	DB_PORT     int
 	DB_NAME     string
 
-	SECRET_KEY             string
-	ACCESS_TOKEN_LIFETIME  = 3 * time.Hour
-	REFRESH_TOKEN_LIFETIME = 14 * 24 * time.Hour // 14 days
+	JWT_SIGNATURE_KEY          []byte
+	JWT_SIGNING_METHOD         = jwt.SigningMethodHS256
+	JWT_ACCESS_TOKEN_LIFETIME  = 3 * time.Hour
+	JWT_REFRESH_TOKEN_LIFETIME = 14 * 24 * time.Hour // 14 days
 )
 
 func Init(filenames ...string) {
@@ -32,5 +34,5 @@ func Init(filenames ...string) {
 	DB_NAME = os.Getenv("DB_NAME")
 	DB_PORT, _ = strconv.Atoi(os.Getenv("DB_PORT"))
 
-	SECRET_KEY = os.Getenv("SECRET_KEY")
+	JWT_SIGNATURE_KEY = []byte(os.Getenv("JWT_SIGNATURE_KEY"))
 }

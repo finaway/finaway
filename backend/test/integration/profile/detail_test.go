@@ -1,8 +1,8 @@
 package detail_test
 
 import (
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
+	"finaway/internal/util/errorutil"
 	"finaway/test/datatest"
 	"finaway/test/helpertest"
 	"fmt"
@@ -35,14 +35,14 @@ func TestProfileDetail_Successful(t *testing.T) {
 
 			t.Run(fmt.Sprintf("get profile for user %s", user.Name), func(t *testing.T) {
 				defer wg.Done()
-				jwt := helpertest.GenerateJwt(user)
+				jwt := helpertest.GenerateJwt(user.ID)
 
 				request := httptest.NewRequest(http.MethodGet, "/api/profile", nil)
 				request.Header.Add("Content-Type", "application/json")
 				request.Header.Add("Authorization", fmt.Sprintf("Bearer %s", jwt.AccessToken))
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
 
@@ -70,7 +70,7 @@ func TestProfileDetail_Unauthorized(t *testing.T) {
 	request.Header.Add("Content-Type", "application/json")
 
 	resp, err := router.Test(request)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	webResp := helpertest.ReadBody(resp)
 

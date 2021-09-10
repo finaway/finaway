@@ -2,8 +2,8 @@ package datatest
 
 import (
 	"encoding/json"
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
+	"finaway/internal/util/errorutil"
 	"finaway/test/helpertest"
 	"io/ioutil"
 	"path"
@@ -12,11 +12,11 @@ import (
 func GetUsers() []domain.User {
 	filePath := path.Join(helpertest.GetMainDir(), "fixtures/users.json")
 	fx, err := ioutil.ReadFile(filePath)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	var users []domain.User
 	err = json.Unmarshal([]byte(fx), &users)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	emails := GetEmails()
 	for i, user := range users {

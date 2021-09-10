@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"finaway/config"
 	"finaway/internal/app"
-	"finaway/internal/helper"
+	"finaway/internal/util/errorutil"
 	"fmt"
 	"path"
 
@@ -22,11 +22,11 @@ func createTestDB(dbName string) {
 		config.DB_HOST,
 		config.DB_PORT,
 	))
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 	defer db.Close()
 
 	_, err = db.Exec(fmt.Sprintf("CREATE DATABASE `%s`", dbName))
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 }
 
 func dropTestDB(dbName string) {
@@ -36,11 +36,11 @@ func dropTestDB(dbName string) {
 		config.DB_HOST,
 		config.DB_PORT,
 	))
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 	defer db.Close()
 
 	_, err = db.Exec(fmt.Sprintf("DROP DATABASE `%s`", dbName))
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 }
 
 func NewTestDB() *gorm.DB {
@@ -59,14 +59,14 @@ func NewTestDB() *gorm.DB {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	return db
 }
 
 func MigrateDataTests(db *gorm.DB) {
 	sqlDB, err := db.DB()
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	fixtures, err := testfixtures.New(
 		testfixtures.Database(sqlDB),
@@ -76,10 +76,10 @@ func MigrateDataTests(db *gorm.DB) {
 			path.Join(GetMainDir(), "fixtures/emails.json"),
 		),
 	)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	err = fixtures.Load()
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 }
 
 func Cleanup(db *gorm.DB) {

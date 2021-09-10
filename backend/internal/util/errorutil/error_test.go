@@ -1,8 +1,8 @@
-package helper_test
+package errorutil_test
 
 import (
 	"errors"
-	"finaway/internal/helper"
+	"finaway/internal/util/errorutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,10 +10,10 @@ import (
 
 func TestPanicIfError(t *testing.T) {
 	assert.Panics(t, func() {
-		helper.PanicIfError(errors.New("something wrong"))
+		errorutil.PanicIfError(errors.New("something wrong"))
 	})
 
 	assert.NotPanics(t, func() {
-		helper.PanicIfError(nil)
+		errorutil.PanicIfError(nil)
 	})
 }

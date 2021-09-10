@@ -8,8 +8,8 @@ import (
 )
 
 type Service struct {
-	AuthService    AuthService
-	ProfileService ProfileService
+	AuthService    *AuthService
+	ProfileService *ProfileService
 }
 
 func New(db *gorm.DB, validate *validator.Validate, repo *repository.Repository) *Service {

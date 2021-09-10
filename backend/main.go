@@ -7,6 +7,7 @@ import (
 	"finaway/internal/helper"
 	"finaway/internal/repository"
 	"finaway/internal/service"
+	"finaway/internal/util/errorutil"
 
 	"github.com/go-playground/validator/v10"
 	_ "github.com/go-sql-driver/mysql"
@@ -30,5 +31,5 @@ func main() {
 
 	router := app.NewRouter(ctrl)
 	err := router.Listen(":3000")
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 }

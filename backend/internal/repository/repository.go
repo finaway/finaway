@@ -3,9 +3,9 @@ package repository
 import "gorm.io/gorm"
 
 type Repository struct {
-	BlacklistedTokenRepository BlacklistedTokenRepository
-	EmailRepository            EmailRepository
-	UserRepository             UserRepository
+	BlacklistedTokenRepository *BlacklistedTokenRepository
+	EmailRepository            *EmailRepository
+	UserRepository             *UserRepository
 }
 
 func New(db *gorm.DB) *Repository {

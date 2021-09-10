@@ -1,4 +1,4 @@
-package sqlhelper
+package sqlutil
 
 import (
 	"database/sql"

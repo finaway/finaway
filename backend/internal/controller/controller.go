@@ -5,13 +5,13 @@ import (
 )
 
 type Controller struct {
-	AuthController    AuthController
-	ProfileController ProfileController
+	AuthController    *AuthController
+	ProfileController *ProfileController
 }
 
-func New(serv *service.Service) *Controller {
+func New(sv *service.Service) *Controller {
 	return &Controller{
-		AuthController:    NewAuthController(serv.AuthService),
-		ProfileController: NewProfileController(serv.ProfileService),
+		AuthController:    NewAuthController(*sv.AuthService),
+		ProfileController: NewProfileController(*sv.ProfileService),
 	}
 }

@@ -2,8 +2,8 @@ package auth_test
 
 import (
 	"encoding/json"
-	"finaway/internal/helper"
 	"finaway/internal/model/domain"
+	"finaway/internal/util/errorutil"
 	"finaway/test/datatest"
 	"finaway/test/helpertest"
 	"net/http"
@@ -20,7 +20,7 @@ func TestRefreshToken_Success(t *testing.T) {
 	defer helpertest.Cleanup(db)
 
 	user := datatest.GetUsers()[0]
-	token := helpertest.GenerateJwt(user)
+	token := helpertest.GenerateJwt(user.ID)
 
 	jsonBody, _ := json.Marshal(map[string]string{
 		"refresh_token": token.RefreshToken,
@@ -30,7 +30,7 @@ func TestRefreshToken_Success(t *testing.T) {
 	request.Header.Add("Content-Type", "application/json")
 
 	resp, err := router.Test(request)
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	webResp := helpertest.ReadBody(resp)
 
@@ -43,12 +43,12 @@ func TestRefreshToken_Fail(t *testing.T) {
 	defer helpertest.Cleanup(db)
 
 	user := datatest.GetUsers()[0]
-	token := helpertest.GenerateJwt(user)
-	expiredToken := helpertest.GenerateExpiredJwt(user)
+	token := helpertest.GenerateJwt(user.ID)
+	expiredToken := helpertest.GenerateExpiredJwt(user.ID)
 
-	blacklistedToken := domain.BlacklistedToken{Token: helpertest.GenerateJwt(user).RefreshToken}
+	blacklistedToken := domain.BlacklistedToken{Token: helpertest.GenerateJwt(user.ID).RefreshToken}
 	err := db.Create(&blacklistedToken).Error
-	helper.PanicIfError(err)
+	errorutil.PanicIfError(err)
 
 	tests := []struct {
 		name  string
@@ -83,7 +83,7 @@ func TestRefreshToken_Fail(t *testing.T) {
 				request.Header.Add("Content-Type", "application/json")
 
 				resp, err := router.Test(request)
-				helper.PanicIfError(err)
+				errorutil.PanicIfError(err)
 
 				webResp := helpertest.ReadBody(resp)
 

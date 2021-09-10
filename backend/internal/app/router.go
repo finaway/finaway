@@ -3,7 +3,7 @@ package app
 import (
 	"finaway/internal/controller"
 	"finaway/internal/exception"
-	"finaway/internal/middleware"
+	m "finaway/internal/middleware"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
@@ -20,7 +20,7 @@ func NewRouter(c *controller.Controller) *fiber.App {
 	app.Post("/api/auth/logout", c.AuthController.Logout)
 	app.Post("/api/auth/refresh-token", c.AuthController.RefreshToken)
 
-	app.Get("/api/profile", middleware.Auth(c.ProfileController.Me))
+	app.Get("/api/profile", m.Auth(c.ProfileController.Me))
 
 	return app
 }

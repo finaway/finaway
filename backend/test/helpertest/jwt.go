@@ -2,11 +2,8 @@ package helpertest
 
 import (
 	"finaway/config"
-	"finaway/internal/helper"
-	"finaway/internal/model/domain"
+	"finaway/internal/util/jwtutil"
 	"time"
-
-	"github.com/golang-jwt/jwt"
 )
 
 type JWTTest struct {
@@ -14,9 +11,9 @@ type JWTTest struct {
 	RefreshToken string
 }
 
-func GenerateJwt(user domain.User) JWTTest {
-	accessToken := helper.GenerateAccessToken(user)
-	refreshToken := helper.GenerateRefreshToken(user)
+func GenerateJwt(uid string) JWTTest {
+	accessToken := jwtutil.GenerateAccessToken(uid)
+	refreshToken := jwtutil.GenerateRefreshToken(uid)
 
 	return JWTTest{
 		AccessToken:  accessToken,
@@ -24,20 +21,12 @@ func GenerateJwt(user domain.User) JWTTest {
 	}
 }
 
-func GenerateExpiredJwt(user domain.User) JWTTest {
-	generate := func(kind string) jwt.MapClaims {
-		return jwt.MapClaims{
-			"id":   user.ID,
-			"kind": kind,
-			"exp":  float64(time.Now().Add(-1 * time.Minute).Unix()),
-		}
-	}
+func GenerateExpiredJwt(uid string) JWTTest {
+	accessToken := jwtutil.NewWithClaims(uid, "access", -1*time.Hour)
+	refreshToken := jwtutil.NewWithClaims(uid, "refresh", -1*time.Hour)
 
-	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, generate("access"))
-	refreshToken := jwt.NewWithClaims(jwt.SigningMethodHS256, generate("refresh"))
-
-	accessTokenString, _ := accessToken.SignedString([]byte(config.SECRET_KEY))
-	refreshTokenString, _ := refreshToken.SignedString([]byte(config.SECRET_KEY))
+	accessTokenString, _ := accessToken.SignedString(config.JWT_SIGNATURE_KEY)
+	refreshTokenString, _ := refreshToken.SignedString(config.JWT_SIGNATURE_KEY)
 
 	return JWTTest{
 		AccessToken:  accessTokenString,
