@@ -1,4 +1,12 @@
 {
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.tabSize": 2,
+    "editor.suggest.insertMode": "replace",
+    "gitlens.codeLens.scopes": ["document"]
+  },
   "editor.rulers": [80, 100, 120],
   "editor.formatOnSave": true,
   "[typescript]": {
