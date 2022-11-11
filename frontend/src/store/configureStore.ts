@@ -1,7 +1,4 @@
-/**
- * Create the store with dynamic reducers
- */
-
+import { persistStore } from 'redux-persist';
 import {
   configureStore,
   getDefaultMiddleware,
@@ -27,12 +24,21 @@ export function configureAppStore() {
     }),
   ] as StoreEnhancer[];
 
+  const reducer = createReducer();
+
   const store = configureStore({
-    reducer: createReducer(),
-    middleware: [...getDefaultMiddleware(), ...middlewares],
+    reducer: reducer,
+    middleware: [
+      ...getDefaultMiddleware({
+        serializableCheck: false,
+      }),
+      ...middlewares,
+    ],
     devTools: process.env.NODE_ENV !== 'production',
     enhancers,
   });
 
-  return store;
+  const persistor = persistStore(store);
+
+  return { store, persistor };
 }

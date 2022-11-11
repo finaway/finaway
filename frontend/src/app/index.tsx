@@ -15,9 +15,17 @@ import { GlobalStyle } from 'styles/global-styles';
 import { HomePage } from './pages/HomePage/Loadable';
 import { NotFoundPage } from './components/NotFoundPage/Loadable';
 import { useTranslation } from 'react-i18next';
+import { LoginPage } from './pages/LoginPage/Loadable';
+import { AuthRoute, GuestRoute } from './components/Route';
+import { useAuthSlice } from './global-stores/auth';
+import { slices } from 'store/bootstrapSlices';
 
 export function App() {
   const { i18n } = useTranslation();
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  slices.forEach(() => useAuthSlice());
+
   return (
     <BrowserRouter>
       <Helmet
@@ -29,7 +37,8 @@ export function App() {
       </Helmet>
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<AuthRoute component={HomePage} />} />
+        <Route path="/login" element={<GuestRoute component={LoginPage} />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <GlobalStyle />

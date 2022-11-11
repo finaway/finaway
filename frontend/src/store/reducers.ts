@@ -3,8 +3,15 @@
  */
 
 import { combineReducers } from '@reduxjs/toolkit';
+import { persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
 
 import { InjectedReducersType } from 'utils/types/injector-typings';
+
+const persistConfig = {
+  key: 'root',
+  storage,
+};
 
 /**
  * Merges the main reducer with the router state and dynamically injected reducers
@@ -12,10 +19,10 @@ import { InjectedReducersType } from 'utils/types/injector-typings';
 export function createReducer(injectedReducers: InjectedReducersType = {}) {
   // Initially we don't have any injectedReducers, so returning identity function to avoid the error
   if (Object.keys(injectedReducers).length === 0) {
-    return state => state;
+    return persistReducer(persistConfig, state => state);
   } else {
-    return combineReducers({
-      ...injectedReducers,
-    });
+    const combinedReducers = combineReducers({ ...injectedReducers });
+    const persistedReducer = persistReducer(persistConfig, combinedReducers);
+    return persistedReducer;
   }
 }
