@@ -6,3 +6,7 @@ export const axios = Axios.create({
     'Content-Type': 'application/json',
   },
 });
+
+export interface Response<T> {
+  data: T;
+}

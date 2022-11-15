@@ -1,5 +1,6 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
+import { axios } from 'utils/axios';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
 import { Saga } from './saga';
 import { AuthState } from './types';
@@ -15,6 +16,8 @@ const slice = createSlice({
   reducers: {
     setToken(state, action: PayloadAction<string>) {
       state.token = action.payload;
+
+      axios.defaults.headers.common.Authorization = `Bearer ${action.payload}`;
     },
     setUser(state, action: PayloadAction<AuthState['user']>) {
       state.user = action.payload;
@@ -22,6 +25,8 @@ const slice = createSlice({
     logout(state) {
       state.token = null;
       state.user = null;
+
+      delete axios.defaults.headers.common.Authorization;
     },
   },
 });

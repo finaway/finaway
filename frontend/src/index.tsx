@@ -27,6 +27,20 @@ import reportWebVitals from 'reportWebVitals';
 // Initialize languages
 import './locales/i18n';
 import { PersistGate } from 'redux-persist/integration/react';
+import { axios } from 'utils/axios';
+
+try {
+  const storage = localStorage.getItem('persist:root');
+  const state = storage ? JSON.parse(storage) : undefined;
+
+  if (typeof state === 'object' && state.auth) {
+    const { token } = JSON.parse(state.auth);
+    axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
+} catch (err) {
+  console.error(err);
+  //
+}
 
 const { store, persistor } = configureAppStore();
 

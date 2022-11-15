@@ -11,6 +11,7 @@ import { InjectedReducersType } from 'utils/types/injector-typings';
 const persistConfig = {
   key: 'root',
   storage,
+  whitelist: ['auth'],
 };
 
 /**

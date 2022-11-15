@@ -1,5 +1,6 @@
 import { AuthState } from 'app/global-stores/auth/types';
 import { LoginPageState } from 'app/pages/LoginPage/slice/types';
+import { ExpensePageState } from 'app/pages/ExpensePage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -9,5 +10,6 @@ import { LoginPageState } from 'app/pages/LoginPage/slice/types';
 export interface RootState {
   auth: AuthState;
   loginPage: LoginPageState;
+  expensePage: ExpensePageState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }
