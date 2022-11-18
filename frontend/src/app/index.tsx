@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { AuthRoute, GuestRoute } from './components/Route';
 import { slices } from 'store/bootstrapSlices';
 import { authRoutes, guestRoutes } from './routes';
+import { ReduxRouterConnector } from './components/ReduxRouterConnector';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -25,33 +26,36 @@ export function App() {
 
   return (
     <BrowserRouter>
-      <Helmet
-        titleTemplate="%s - React Boilerplate"
-        defaultTitle="React Boilerplate"
-        htmlAttributes={{ lang: i18n.language }}
-      >
-        <meta name="description" content="A React Boilerplate application" />
-      </Helmet>
+      <ReduxRouterConnector>
+        <Helmet
+          titleTemplate="%s - React Boilerplate"
+          defaultTitle="React Boilerplate"
+          htmlAttributes={{ lang: i18n.language }}
+        >
+          <meta name="description" content="A React Boilerplate application" />
+        </Helmet>
 
-      <Routes>
-        {guestRoutes.map(route => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={<GuestRoute component={route.component} />}
-          />
-        ))}
+        <Routes>
+          {guestRoutes.map(route => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<GuestRoute component={route.component} />}
+            />
+          ))}
 
-        {authRoutes.map(route => (
-          <Route
-            key={route.path}
-            path={route.path}
-            element={<AuthRoute component={route.component} />}
-          />
-        ))}
+          {authRoutes.map(route => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={<AuthRoute component={route.component} />}
+            />
+          ))}
 
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </ReduxRouterConnector>
+
       <GlobalStyle />
     </BrowserRouter>
   );
