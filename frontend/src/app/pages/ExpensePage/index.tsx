@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
 import { useExpensePageSlice } from './slice';
 import { selectExpensePage } from './slice/selectors';
@@ -15,6 +16,10 @@ export function ExpensePage() {
 
   return (
     <div>
+      <div>
+        <Link to={'/expense/create'}>Create</Link>
+      </div>
+
       {loadings.fetching && <div>Loading...</div>}
       {!loadings.fetching && expenses.length === 0 && <div>No expenses</div>}
       <ul>

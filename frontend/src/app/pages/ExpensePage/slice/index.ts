@@ -1,5 +1,5 @@
 import { PayloadAction } from '@reduxjs/toolkit';
-import { Expense } from 'models';
+import { Currency, Expense } from 'models';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { Response } from 'utils/axios';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
@@ -12,8 +12,11 @@ export const initialState: ExpensePageState = {
     creating: false,
     updating: false,
     deleting: false,
+
+    currencies_fetching: false,
   },
   expenses: [],
+  currencies: [],
 };
 
 const slice = createSlice({
@@ -29,6 +32,28 @@ const slice = createSlice({
     },
     fetchExpenseError(state, action: PayloadAction<any>) {
       state.loadings.fetching = false;
+    },
+
+    createExpense(state, action: PayloadAction<Expense>) {
+      state.loadings.creating = true;
+    },
+    createExpenseSuccess(state, action: PayloadAction<Response<Expense>>) {
+      state.loadings.creating = false;
+      state.expenses.push(action.payload.data);
+    },
+    createExpenseError(state, action: PayloadAction<any>) {
+      state.loadings.creating = false;
+    },
+
+    fetchCurrencies(state) {
+      state.loadings.currencies_fetching = true;
+    },
+    fetchCurrenciesSuccess(state, action: PayloadAction<Response<Currency[]>>) {
+      state.loadings.currencies_fetching = false;
+      state.currencies = action.payload.data;
+    },
+    fetchCurrenciesError(state, action: PayloadAction<any>) {
+      state.loadings.currencies_fetching = false;
     },
   },
 });

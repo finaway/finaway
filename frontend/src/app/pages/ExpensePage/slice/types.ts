@@ -1,4 +1,4 @@
-import { Expense } from 'models';
+import { Currency, Expense } from 'models';
 
 export interface ExpensePageState {
   loadings: {
@@ -6,6 +6,9 @@ export interface ExpensePageState {
     creating: boolean;
     updating: boolean;
     deleting: boolean;
+
+    currencies_fetching: boolean;
   };
   expenses: Expense[];
+  currencies: Currency[];
 }
