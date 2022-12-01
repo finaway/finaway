@@ -1,3 +1,4 @@
+import { getRouteByName } from './../../../helpers/routesRegistered';
 import { api } from 'api';
 import { RouterActions } from 'app/global-stores/router';
 import { AxiosError } from 'axios';
@@ -26,7 +27,7 @@ function* createExpense(action: ReturnType<typeof actions.createExpense>) {
   try {
     const response = yield call(api.expense.create, action.payload);
     yield put(actions.createExpenseSuccess(response.data));
-    yield put(RouterActions.push('/expense'));
+    yield put(RouterActions.push(getRouteByName('expenses.index')));
   } catch (err) {
     yield put(actions.createExpenseError(err as AxiosError | Error));
   }

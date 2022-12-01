@@ -1,3 +1,4 @@
+import { getRouteByName } from 'app/helpers/routesRegistered';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,8 @@ export function ExpensePage() {
   return (
     <div>
       <div>
-        <Link to={'/expense/create'}>Create</Link>
+        <Link to={getRouteByName('home')}>Home</Link>
+        <Link to={getRouteByName('expenses.create')}>Create</Link>
       </div>
 
       {loadings.fetching && <div>Loading...</div>}
