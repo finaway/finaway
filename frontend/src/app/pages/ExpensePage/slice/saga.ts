@@ -33,8 +33,18 @@ function* createExpense(action: ReturnType<typeof actions.createExpense>) {
   }
 }
 
+function* deleteExpense(action: ReturnType<typeof actions.deleteExpense>) {
+  try {
+    const response = yield call(api.expense.delete, action.payload);
+    yield put(actions.deleteExpenseSuccess(response.data));
+  } catch (err) {
+    yield put(actions.deleteExpenseError(err as AxiosError | Error));
+  }
+}
+
 export function* Saga() {
   yield takeLatest(actions.fetchExpense.type, fetchExpense);
   yield takeLatest(actions.fetchCurrencies.type, fetchCurrencies);
   yield takeLatest(actions.createExpense.type, createExpense);
+  yield takeLatest(actions.deleteExpense.type, deleteExpense);
 }

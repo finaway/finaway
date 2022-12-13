@@ -6,6 +6,7 @@ export interface ExpensePageState {
     creating: boolean;
     updating: boolean;
     deleting: boolean;
+    deleting_id: number | null;
 
     currencies_fetching: boolean;
   };

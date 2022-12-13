@@ -4,4 +4,5 @@ import { axios, Response } from 'utils/axios';
 export const apiExpense = {
   getAll: () => axios.get<Response<Expense[]>>('/expenses'),
   create: (body: Expense) => axios.post<Response<Expense>>('/expenses', body),
+  delete: (id: number) => axios.delete<Response<Expense>>(`/expenses/${id}`),
 };

@@ -12,6 +12,7 @@ export const initialState: ExpensePageState = {
     creating: false,
     updating: false,
     deleting: false,
+    deleting_id: null,
 
     currencies_fetching: false,
   },
@@ -43,6 +44,21 @@ const slice = createSlice({
     },
     createExpenseError(state, action: PayloadAction<any>) {
       state.loadings.creating = false;
+    },
+
+    deleteExpense(state, action: PayloadAction<number>) {
+      state.loadings.deleting = true;
+      state.loadings.deleting_id = action.payload;
+    },
+    deleteExpenseSuccess(state, action: PayloadAction<Response<Expense>>) {
+      state.loadings.deleting = false;
+      state.expenses = state.expenses.filter(
+        expense => expense.id !== state.loadings.deleting_id,
+      );
+    },
+    deleteExpenseError(state, action: PayloadAction<any>) {
+      state.loadings.deleting = false;
+      state.loadings.deleting_id = null;
     },
 
     fetchCurrencies(state) {
