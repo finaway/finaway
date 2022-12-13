@@ -15,13 +15,18 @@ const slice = createSlice({
   name: 'loginPage',
   initialState,
   reducers: {
-    login(state, action: PayloadAction<{ email: string; password: string }>) {},
+    login(state, action: PayloadAction<{ email: string; password: string }>) {
+      state.errors = {};
+      state.loading = true;
+    },
     loginError(state, action: PayloadAction<AxiosError | Error>) {
       const err = action.payload;
 
       if (axios.isAxiosError(err) && err.response) {
         state.errors.message = (err.response.data as LoginError).message;
       }
+
+      state.loading = false;
     },
   },
 });

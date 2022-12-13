@@ -15,6 +15,12 @@ import { Provider } from 'react-redux';
 // Use consistent styling
 import 'sanitize.css/sanitize.css';
 
+// Import fonts
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 // Import root app
 import { App } from 'app';
 
@@ -28,6 +34,7 @@ import reportWebVitals from 'reportWebVitals';
 import './locales/i18n';
 import { PersistGate } from 'redux-persist/integration/react';
 import { axios } from 'utils/axios';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 try {
   const storage = localStorage.getItem('persist:root');
@@ -44,6 +51,8 @@ try {
 
 const { store, persistor } = configureAppStore();
 
+const theme = createTheme();
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
@@ -52,9 +61,11 @@ root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <HelmetProvider>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
+        <ThemeProvider theme={theme}>
+          <React.StrictMode>
+            <App />
+          </React.StrictMode>
+        </ThemeProvider>
       </HelmetProvider>
     </PersistGate>
   </Provider>,
