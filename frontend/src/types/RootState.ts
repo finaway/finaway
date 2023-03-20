@@ -2,6 +2,7 @@ import { AuthState } from 'app/global-stores/auth/types';
 import { LoginPageState } from 'app/pages/LoginPage/slice/types';
 import { ExpensePageState } from 'app/pages/ExpensePage/slice/types';
 import { RouterState } from 'app/global-stores/router/types';
+import { SignUpPageState } from 'app/pages/SignUpPage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -11,6 +12,7 @@ import { RouterState } from 'app/global-stores/router/types';
 export interface RootState {
   auth: AuthState;
   loginPage: LoginPageState;
+  signupPage: SignUpPageState;
   expensePage: ExpensePageState;
   router: RouterState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly

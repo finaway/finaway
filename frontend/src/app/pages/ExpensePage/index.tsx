@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
 import { useExpensePageSlice } from './slice';
 import { selectExpensePage } from './slice/selectors';
+import { DashboardLayout } from 'app/components/Layouts/DashboardLayout/Loadable';
 
 export function ExpensePage() {
   const dispatch = useDispatch();
@@ -20,7 +21,7 @@ export function ExpensePage() {
   });
 
   return (
-    <div>
+    <DashboardLayout title="Expenses">
       <div>
         <Link to={getRouteByName('home')}>Home</Link>
         <Link to={getRouteByName('expenses.create')}>Create</Link>
@@ -42,6 +43,6 @@ export function ExpensePage() {
           </li>
         ))}
       </ul>
-    </div>
+    </DashboardLayout>
   );
 }

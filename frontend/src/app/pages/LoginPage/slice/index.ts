@@ -19,6 +19,9 @@ const slice = createSlice({
       state.errors = {};
       state.loading = true;
     },
+    loginSuccess(state) {
+      state.loading = false;
+    },
     loginError(state, action: PayloadAction<AxiosError | Error>) {
       const err = action.payload;
 

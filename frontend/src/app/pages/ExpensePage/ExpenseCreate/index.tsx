@@ -22,13 +22,11 @@ export function ExpenseCreate() {
   });
 
   return (
-    <>
-      <Form
-        currencies={currencies}
-        loadings={loadings}
-        onSubmit={handleSubmit}
-        errors={{}}
-      />
-    </>
+    <Form
+      currencies={currencies}
+      loadings={loadings}
+      onSubmit={handleSubmit}
+      errors={{}}
+    />
   );
 }

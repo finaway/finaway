@@ -10,6 +10,7 @@ function* login(action: ReturnType<typeof LoginPageActions.login>) {
 
     yield put(AuthActions.setToken(response.data.data.token));
     yield put(AuthActions.setUser(response.data.data.user));
+    yield put(LoginPageActions.loginSuccess());
   } catch (err) {
     yield put(LoginPageActions.loginError(err as AxiosError | Error));
   }

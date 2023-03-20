@@ -8,4 +8,15 @@ export const apiAuth = {
       payload,
     );
   },
+  register: (payload: {
+    name: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }) => {
+    return axios.post<Response<{ user: User; token: string }>>(
+      '/auth/register',
+      payload,
+    );
+  },
 };
