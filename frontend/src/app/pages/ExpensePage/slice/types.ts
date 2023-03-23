@@ -12,4 +12,10 @@ export interface ExpensePageState {
   };
   expenses: Expense[];
   currencies: Currency[];
+  errors: {
+    description?: string[];
+    amount?: string[];
+    currency_id?: string[];
+    date?: string[];
+  };
 }

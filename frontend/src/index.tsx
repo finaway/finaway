@@ -35,6 +35,8 @@ import './locales/i18n';
 import { PersistGate } from 'redux-persist/integration/react';
 import { axios } from 'utils/axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 try {
   const storage = localStorage.getItem('persist:root');
@@ -62,9 +64,11 @@ root.render(
     <PersistGate loading={null} persistor={persistor}>
       <HelmetProvider>
         <ThemeProvider theme={theme}>
-          <React.StrictMode>
-            <App />
-          </React.StrictMode>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <React.StrictMode>
+              <App />
+            </React.StrictMode>
+          </LocalizationProvider>
         </ThemeProvider>
       </HelmetProvider>
     </PersistGate>

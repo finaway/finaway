@@ -18,6 +18,7 @@ export const initialState: ExpensePageState = {
   },
   expenses: [],
   currencies: [],
+  errors: {},
 };
 
 const slice = createSlice({
@@ -37,6 +38,7 @@ const slice = createSlice({
 
     createExpense(state, action: PayloadAction<Expense>) {
       state.loadings.creating = true;
+      state.errors = {};
     },
     createExpenseSuccess(state, action: PayloadAction<Response<Expense>>) {
       state.loadings.creating = false;
@@ -44,6 +46,10 @@ const slice = createSlice({
     },
     createExpenseError(state, action: PayloadAction<any>) {
       state.loadings.creating = false;
+
+      if (action.payload.response) {
+        state.errors = action.payload.response.data.errors;
+      }
     },
 
     deleteExpense(state, action: PayloadAction<number>) {

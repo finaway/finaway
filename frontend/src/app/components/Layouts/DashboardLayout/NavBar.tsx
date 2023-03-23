@@ -10,13 +10,14 @@ import Menu from '@mui/material/Menu';
 import Divider from '@mui/material/Divider';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Container from '@mui/material/Container';
+import { red } from '@mui/material/colors';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { red } from '@mui/material/colors';
 
 const menuListWidth = 170;
 
@@ -40,21 +41,21 @@ export function NavBar({ title, onDrawerOpen, onLogout }: Props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
-        <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={onDrawerOpen}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            {title}
-          </Typography>
-          <div>
+        <Container maxWidth="sm">
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={onDrawerOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              {title}
+            </Typography>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -106,8 +107,8 @@ export function NavBar({ title, onDrawerOpen, onLogout }: Props) {
                 <ListItemText sx={{ color: red[500] }}>Logout</ListItemText>
               </MenuItem>
             </Menu>
-          </div>
-        </Toolbar>
+          </Toolbar>
+        </Container>
       </AppBar>
     </Box>
   );
