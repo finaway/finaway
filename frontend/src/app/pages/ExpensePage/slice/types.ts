@@ -1,9 +1,13 @@
 import { Currency, Expense } from 'models';
 
 export interface ExpensePageState {
+  formOpen: boolean;
+  formData: Expense | null;
+
   loadings: {
     fetching: boolean;
     creating: boolean;
+    showing: boolean;
     updating: boolean;
     deleting: boolean;
     deleting_id: number | null;

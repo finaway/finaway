@@ -43,7 +43,9 @@ export function Form() {
               error={!!errors?.description}
               helperText={errors?.description?.message}
               autoFocus
-              disabled={loadings.creating}
+              disabled={
+                loadings.creating || loadings.updating || loadings.showing
+              }
             />
           </>
         )}
@@ -58,11 +60,11 @@ export function Form() {
           formState: { errors },
         }) => (
           <DatePicker
+            value={value}
+            onChange={onChange}
             label="Date"
             slotProps={{
               textField: {
-                value: value,
-                onChange: onChange,
                 onBlur: onBlur,
                 error: !!errors?.date,
                 helperText: errors?.date?.[0],
@@ -70,7 +72,9 @@ export function Form() {
                 margin: 'normal',
               },
             }}
-            disabled={loadings.creating}
+            disabled={
+              loadings.creating || loadings.updating || loadings.showing
+            }
           />
         )}
       />
@@ -93,7 +97,9 @@ export function Form() {
             error={!!errors?.currency_id}
             helperText={errors?.currency_id?.message}
             fullWidth
-            disabled={loadings.creating}
+            disabled={
+              loadings.creating || loadings.updating || loadings.showing
+            }
           >
             {currencies.map(currency => (
               <MenuItem key={currency.id} value={currency.id}>
@@ -126,7 +132,9 @@ export function Form() {
             helperText={errors?.amount?.message}
             autoComplete="off"
             fullWidth
-            disabled={loadings.creating}
+            disabled={
+              loadings.creating || loadings.updating || loadings.showing
+            }
           />
         )}
       />

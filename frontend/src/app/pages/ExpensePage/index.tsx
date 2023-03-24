@@ -1,5 +1,5 @@
 import { getRouteByName } from 'app/helpers/routesRegistered';
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
@@ -13,16 +13,18 @@ export function ExpensePage() {
   const dispatch = useDispatch();
 
   const { actions } = useExpensePageSlice();
-  const { expenses, loadings } = useSelector(selectExpensePage);
+  const { expenses, loadings, formOpen } = useSelector(selectExpensePage);
 
-  const [isFormOpen, setIsFormOpen] = useState(true);
+  const handleCreate = () => {
+    dispatch(actions.create());
+  };
 
-  const handleFormOpen = () => {
-    setIsFormOpen(true);
+  const handleEdit = (id: number) => {
+    dispatch(actions.edit(id));
   };
 
   const handleFormClose = () => {
-    setIsFormOpen(false);
+    dispatch(actions.closeForm());
   };
 
   const handleDelete = (id: number) => {
@@ -37,9 +39,7 @@ export function ExpensePage() {
     <DashboardLayout title="Expenses">
       <div>
         <Link to={getRouteByName('home')}>Home</Link>
-        {/* <Link to={getRouteByName('expenses.create')}>Create</Link> */}
-
-        <Button onClick={handleFormOpen}>Add</Button>
+        <Button onClick={handleCreate}>Add</Button>
       </div>
 
       {loadings.fetching && <div>Loading...</div>}
@@ -48,6 +48,13 @@ export function ExpensePage() {
         {expenses.map(expense => (
           <li key={expense.id}>
             {expense.description}-
+            <button
+              type="button"
+              onClick={() => handleEdit(expense.id as number)}
+            >
+              Edit
+            </button>
+            -
             <button
               type="button"
               onClick={() => handleDelete(expense.id as number)}
@@ -59,7 +66,7 @@ export function ExpensePage() {
         ))}
       </ul>
 
-      <FormDialog isOpen={isFormOpen} onClose={handleFormClose} />
+      <FormDialog open={formOpen} onClose={handleFormClose} />
     </DashboardLayout>
   );
 }

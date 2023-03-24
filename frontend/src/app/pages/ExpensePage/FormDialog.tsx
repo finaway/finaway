@@ -5,6 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import LinearProgress from '@mui/material/LinearProgress';
 import { FormProvider, useForm } from 'react-hook-form';
 import { Form, FormValues } from './Form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -15,22 +16,26 @@ import { selectExpensePage } from './slice/selectors';
 import dayjs from 'dayjs';
 
 interface FormDialogProps {
-  isOpen: boolean;
+  open: boolean;
   onClose: () => void;
 }
 
-export function FormDialog({ isOpen, onClose }: FormDialogProps) {
+const defaultValues = {
+  description: '',
+  amount: 0,
+  currency_id: 0,
+  date: dayjs(),
+};
+
+export function FormDialog({ open, onClose }: FormDialogProps) {
   const dispatch = useDispatch();
   const { actions } = useExpensePageSlice();
-  const { loadings, errors } = useSelector(selectExpensePage);
+  const { loadings, errors, formData } = useSelector(selectExpensePage);
+
+  const isEditing = !!formData?.id;
 
   const formCtx = useForm<FormValues>({
-    defaultValues: {
-      description: '',
-      amount: 0,
-      currency_id: 0,
-      date: dayjs(),
-    },
+    defaultValues: defaultValues,
   });
 
   const onSubmit = (values: FormValues) => {
@@ -39,7 +44,13 @@ export function FormDialog({ isOpen, onClose }: FormDialogProps) {
       date: values?.date?.format('YYYY-MM-DD'),
     };
 
-    dispatch(actions.createExpense(payload));
+    if (isEditing) {
+      dispatch(
+        actions.updateExpense({ id: formData.id as number, data: payload }),
+      );
+    } else {
+      dispatch(actions.createExpense(payload));
+    }
   };
 
   useEffectOnce(() => {
@@ -56,12 +67,34 @@ export function FormDialog({ isOpen, onClose }: FormDialogProps) {
     });
   }, [errors, formCtx]);
 
+  // Sync form data from redux to form context
+  useEffect(() => {
+    if (formData) {
+      formCtx.reset({
+        ...formData,
+        date: dayjs(formData?.date),
+      });
+    } else {
+      formCtx.reset(defaultValues);
+    }
+  }, [formCtx, formData]);
+
+  // Reset form context when dialog is closed
+  useEffect(() => {
+    if (!open) {
+      formCtx.reset(defaultValues);
+    }
+  }, [formCtx, open]);
+
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={open} onClose={onClose}>
       <FormProvider {...formCtx}>
         <form onSubmit={formCtx.handleSubmit(onSubmit)}>
-          <DialogTitle>Add Expense</DialogTitle>
+          <DialogTitle>
+            {isEditing ? 'Edit Expense' : 'Add Expense'}
+          </DialogTitle>
           <DialogContent>
+            {loadings.showing && <LinearProgress />}
             <Form />
           </DialogContent>
           <DialogActions>
@@ -69,9 +102,12 @@ export function FormDialog({ isOpen, onClose }: FormDialogProps) {
             <LoadingButton
               type="submit"
               variant="contained"
-              loading={loadings.creating}
+              disabled={
+                loadings.creating || loadings.updating || loadings.showing
+              }
+              loading={loadings.creating || loadings.updating}
             >
-              Add
+              {isEditing ? 'Update' : 'Add'}
             </LoadingButton>
           </DialogActions>
         </form>
