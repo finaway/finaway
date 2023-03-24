@@ -17,6 +17,10 @@ class Expense extends Model
         'currency_id',
     ];
 
+    protected $casts = [
+        'amount' => 'float',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

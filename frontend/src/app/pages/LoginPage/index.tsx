@@ -23,8 +23,8 @@ export function LoginPage() {
   return (
     <>
       <Helmet>
-        <title>LoginPage</title>
-        <meta name="description" content="A Boilerplate application homepage" />
+        <title>Login</title>
+        <meta name="description" content="Login first to start your session" />
       </Helmet>
 
       <Container component="main" maxWidth="xs">

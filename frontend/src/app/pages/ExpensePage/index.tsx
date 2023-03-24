@@ -1,15 +1,18 @@
-import { getRouteByName } from 'app/helpers/routesRegistered';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { useEffectOnce } from 'react-use';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import { useExpensePageSlice } from './slice';
 import { selectExpensePage } from './slice/selectors';
-import { DashboardLayout } from 'app/components/Layouts/DashboardLayout/Loadable';
-import Button from '@mui/material/Button';
 import { FormDialog } from './FormDialog';
+import { List } from './List';
+import { useAppBarTitle } from 'app/hooks/useAppBarTitle';
+import { Helmet } from 'react-helmet-async';
 
 export function ExpensePage() {
+  useAppBarTitle('Expense');
+
   const dispatch = useDispatch();
 
   const { actions } = useExpensePageSlice();
@@ -36,37 +39,31 @@ export function ExpensePage() {
   });
 
   return (
-    <DashboardLayout title="Expenses">
-      <div>
-        <Link to={getRouteByName('home')}>Home</Link>
-        <Button onClick={handleCreate}>Add</Button>
-      </div>
+    <>
+      <Helmet>
+        <title>Expense</title>
+      </Helmet>
 
-      {loadings.fetching && <div>Loading...</div>}
-      {!loadings.fetching && expenses.length === 0 && <div>No expenses</div>}
-      <ul>
-        {expenses.map(expense => (
-          <li key={expense.id}>
-            {expense.description}-
-            <button
-              type="button"
-              onClick={() => handleEdit(expense.id as number)}
-            >
-              Edit
-            </button>
-            -
-            <button
-              type="button"
-              onClick={() => handleDelete(expense.id as number)}
-              disabled={loadings.deleting}
-            >
-              {loadings.deleting_id === expense.id ? 'Loading...' : 'Delete'}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <List
+        data={expenses}
+        loadings={loadings}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <Fab
+        color="primary"
+        aria-label="add"
+        sx={{
+          position: 'fixed',
+          bottom: 16,
+          right: 16,
+        }}
+      >
+        <AddIcon onClick={handleCreate} />
+      </Fab>
 
       <FormDialog open={formOpen} onClose={handleFormClose} />
-    </DashboardLayout>
+    </>
   );
 }

@@ -18,6 +18,7 @@ import { AuthRoute, GuestRoute } from './components/Route';
 import { slices } from 'store/bootstrapSlices';
 import { authRoutes, guestRoutes } from './routes';
 import { ReduxRouterConnector } from './components/ReduxRouterConnector';
+import { DashboardLayout } from './components/Layouts/DashboardLayout/Loadable';
 
 export function App() {
   const { i18n } = useTranslation();
@@ -28,11 +29,14 @@ export function App() {
     <BrowserRouter>
       <ReduxRouterConnector>
         <Helmet
-          titleTemplate="%s - React Boilerplate"
-          defaultTitle="React Boilerplate"
+          titleTemplate="%s | Finaway"
+          defaultTitle="Finaway"
           htmlAttributes={{ lang: i18n.language }}
         >
-          <meta name="description" content="A React Boilerplate application" />
+          <meta
+            name="description"
+            content="Financial expense management application"
+          />
         </Helmet>
 
         <Routes>
@@ -48,7 +52,11 @@ export function App() {
             <Route
               key={route.path}
               path={route.path}
-              element={<AuthRoute component={route.component} />}
+              element={
+                <DashboardLayout>
+                  <AuthRoute component={route.component} />
+                </DashboardLayout>
+              }
             />
           ))}
 

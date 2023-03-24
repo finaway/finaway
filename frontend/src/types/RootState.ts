@@ -1,3 +1,4 @@
+import { AppState } from 'app/global-stores/app/types';
 import { AuthState } from 'app/global-stores/auth/types';
 import { LoginPageState } from 'app/pages/LoginPage/slice/types';
 import { ExpensePageState } from 'app/pages/ExpensePage/slice/types';
@@ -10,6 +11,7 @@ import { SignUpPageState } from 'app/pages/SignUpPage/slice/types';
   You have to declare them here manually
 */
 export interface RootState {
+  app: AppState;
   auth: AuthState;
   loginPage: LoginPageState;
   signupPage: SignUpPageState;

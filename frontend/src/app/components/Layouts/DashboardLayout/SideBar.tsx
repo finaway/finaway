@@ -9,11 +9,13 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import HomeIcon from '@mui/icons-material/Home';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import { red } from '@mui/material/colors';
+import { getRouteByName } from 'app/helpers/routesRegistered';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -23,7 +25,22 @@ interface Props {
   onLogout: () => void;
 }
 
+const menus = [
+  {
+    text: 'Home',
+    icon: <HomeIcon />,
+    path: getRouteByName('home'),
+  },
+  {
+    text: 'Expense',
+    icon: <AttachMoneyIcon />,
+    path: getRouteByName('expenses.index'),
+  },
+];
+
 export function SideBar({ isOpen, onClose, onLogout }: Props) {
+  const navigate = useNavigate();
+
   return (
     <Drawer
       anchor="left"
@@ -36,13 +53,16 @@ export function SideBar({ isOpen, onClose, onLogout }: Props) {
       <Toolbar />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
+        {menus.map(menu => (
+          <ListItem key={menu.text} disablePadding>
+            <ListItemButton
+              onClick={() => {
+                navigate(menu.path);
+                onClose();
+              }}
+            >
+              <ListItemIcon>{menu.icon}</ListItemIcon>
+              <ListItemText primary={menu.text} />
             </ListItemButton>
           </ListItem>
         ))}

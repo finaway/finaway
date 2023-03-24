@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { NavBar } from './NavBar';
 import Container from '@mui/material/Container';
 import { SideBar } from './SideBar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useAuthSlice } from 'app/global-stores/auth';
+import { selectApp } from 'app/global-stores/app/selectors';
 
 interface Props {
-  title: string;
   children: React.ReactNode;
 }
 
-export function DashboardLayout({ title, children }: Props) {
+export function DashboardLayout({ children }: Props) {
   const dispatch = useDispatch();
+  const { appBarTitle } = useSelector(selectApp);
   const { actions } = useAuthSlice();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -31,7 +32,7 @@ export function DashboardLayout({ title, children }: Props) {
   return (
     <>
       <NavBar
-        title={title}
+        title={appBarTitle}
         onDrawerOpen={handleDrawerOpen}
         onLogout={handleLogout}
       />
@@ -44,7 +45,6 @@ export function DashboardLayout({ title, children }: Props) {
         maxWidth="sm"
         sx={{
           marginTop: '64px',
-          marginBottom: '64px',
         }}
       >
         {children}
