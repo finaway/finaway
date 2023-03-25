@@ -18,6 +18,8 @@ export function ControlledInputDate<T extends FieldValues>({
   label = '',
   autoFocus = false,
   disabled = false,
+  // Custom
+  'data-testid': dataTestId = '',
 }: ControlledInputDateProps<T>) {
   return (
     <Controller
@@ -45,6 +47,9 @@ export function ControlledInputDate<T extends FieldValues>({
                 fullWidth: true,
                 margin: 'normal',
                 autoFocus: autoFocus,
+                inputProps: {
+                  'data-testid': dataTestId,
+                },
               },
             }}
             disabled={disabled}

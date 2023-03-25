@@ -23,6 +23,7 @@ export function ControlledSelect<T extends FieldValues>({
   disabled = false,
   // Custom
   options,
+  'data-testid': dataTestId = '',
 }: ControlledSelectProps<T>) {
   return (
     <Controller
@@ -42,7 +43,7 @@ export function ControlledSelect<T extends FieldValues>({
             id={id}
             label={label}
             type="text"
-            value={value}
+            value={value || ''}
             onChange={onChange}
             onBlur={onBlur}
             margin="normal"
@@ -52,6 +53,9 @@ export function ControlledSelect<T extends FieldValues>({
             autoFocus={autoFocus}
             disabled={disabled}
             fullWidth
+            inputProps={{
+              'data-testid': dataTestId,
+            }}
           >
             {options.map(option => (
               <MenuItem key={option.value} value={option.value}>

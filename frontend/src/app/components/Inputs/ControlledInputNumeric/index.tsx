@@ -19,6 +19,8 @@ export function ControlledInputNumeric<T extends FieldValues>({
   label = '',
   autoFocus = false,
   disabled = false,
+  // Custom
+  'data-testid': dataTestId = '',
 }: ControlledInputNumericProps<T>) {
   return (
     <Controller
@@ -50,6 +52,9 @@ export function ControlledInputNumeric<T extends FieldValues>({
             autoFocus={autoFocus}
             disabled={disabled}
             fullWidth
+            inputProps={{
+              'data-testid': dataTestId,
+            }}
           />
         </>
       )}

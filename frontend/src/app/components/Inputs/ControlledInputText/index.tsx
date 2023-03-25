@@ -21,6 +21,7 @@ export function ControlledInputText<T extends FieldValues>({
   label = '',
   autoFocus = false,
   disabled = false,
+  'data-testid': dataTestId = '',
 }: ControlledInputTextProps<T>) {
   return (
     <Controller
@@ -49,6 +50,9 @@ export function ControlledInputText<T extends FieldValues>({
             autoFocus={autoFocus}
             disabled={disabled}
             fullWidth
+            inputProps={{
+              'data-testid': dataTestId,
+            }}
           />
         </>
       )}

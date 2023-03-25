@@ -14,4 +14,5 @@ export interface Controlled<T extends FieldValues>
   label?: React.ReactNode;
   autoFocus?: boolean;
   disabled?: boolean;
+  'data-testid'?: string;
 }
