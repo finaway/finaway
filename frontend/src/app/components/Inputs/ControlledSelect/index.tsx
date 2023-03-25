@@ -1,27 +1,15 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-  UseControllerProps,
-} from 'react-hook-form';
+import { Controller, FieldValues } from 'react-hook-form';
 import { SelectOption } from 'types/SelectOption';
+import { Controlled } from '../types/Controlled';
 
-interface ControlledSelectProps<T extends FieldValues>
-  extends UseControllerProps<T> {
-  name: Path<T>;
-  control: Control<T, any>;
+interface ControlledSelectProps<T extends FieldValues> extends Controlled<T> {
   options: SelectOption[];
-  id?: string;
-  label?: React.ReactNode;
-  autoFocus?: boolean;
-  disabled?: boolean;
 }
 
-export function ControlledSelect<T extends FieldValues = FieldValues>({
+export function ControlledSelect<T extends FieldValues>({
   // React hook form
   name,
   control,

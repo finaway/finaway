@@ -1,25 +1,13 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-  UseControllerProps,
-} from 'react-hook-form';
+import { Controller, FieldValues } from 'react-hook-form';
 import { InputNumeric } from '../InputNumeric';
+import { Controlled } from '../types/Controlled';
 
 interface ControlledInputNumericProps<T extends FieldValues>
-  extends UseControllerProps<T> {
-  name: Path<T>;
-  control: Control<T, any>;
-  id?: string;
-  label?: React.ReactNode;
-  autoFocus?: boolean;
-  disabled?: boolean;
-}
+  extends Controlled<T> {}
 
-export function ControlledInputNumeric<T extends FieldValues = FieldValues>({
+export function ControlledInputNumeric<T extends FieldValues>({
   // React hook form
   name,
   control,

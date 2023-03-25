@@ -1,24 +1,12 @@
 import React from 'react';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-  UseControllerProps,
-} from 'react-hook-form';
+import { Controller, FieldValues } from 'react-hook-form';
 import { DatePicker } from '@mui/x-date-pickers';
+import { Controlled } from '../types/Controlled';
 
 interface ControlledInputDateProps<T extends FieldValues>
-  extends UseControllerProps<T> {
-  name: Path<T>;
-  control: Control<T, any>;
-  id?: string;
-  label?: React.ReactNode;
-  autoFocus?: boolean;
-  disabled?: boolean;
-}
+  extends Controlled<T> {}
 
-export function ControlledInputDate<T extends FieldValues = FieldValues>({
+export function ControlledInputDate<T extends FieldValues>({
   // React hook form
   name,
   control,

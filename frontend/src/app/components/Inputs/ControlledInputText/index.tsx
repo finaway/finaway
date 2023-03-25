@@ -1,25 +1,14 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
-import {
-  Control,
-  Controller,
-  FieldValues,
-  Path,
-  UseControllerProps,
-} from 'react-hook-form';
+import { Controller, FieldValues } from 'react-hook-form';
+import { Controlled } from '../types/Controlled';
 
 interface ControlledInputTextProps<T extends FieldValues>
-  extends UseControllerProps<T> {
-  name: Path<T>;
-  control: Control<T, any>;
-  id?: string;
-  label?: React.ReactNode;
-  autoFocus?: boolean;
-  disabled?: boolean;
+  extends Controlled<T> {
   type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
 }
 
-export function ControlledInputText<T extends FieldValues = FieldValues>({
+export function ControlledInputText<T extends FieldValues>({
   // React hook form
   name,
   control,
