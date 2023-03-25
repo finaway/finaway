@@ -1,12 +1,12 @@
 import React from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { Link as RouterLink } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
-import TextField from '@mui/material/TextField';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { getRouteByName } from 'app/helpers/routesRegistered';
+import { ControlledInputText } from 'app/components/Inputs';
 
 export type FormValues = {
   email: string;
@@ -34,44 +34,21 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
         </Alert>
       )}
 
-      <Controller
+      <ControlledInputText
         name="email"
+        label="Email Address"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            type="email"
-            autoComplete="email"
-            autoFocus
-            disabled={loading}
-          />
-        )}
+        disabled={loading}
+        autoFocus
       />
 
-      <Controller
+      <ControlledInputText
         name="password"
+        label="Password"
+        type="password"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            autoFocus
-            disabled={loading}
-          />
-        )}
+        disabled={loading}
+        autoFocus
       />
 
       <LoadingButton

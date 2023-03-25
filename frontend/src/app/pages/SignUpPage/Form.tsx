@@ -61,7 +61,6 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
             label="Email Address"
             type="email"
             autoComplete="email"
-            autoFocus
             disabled={loading}
             error={!!errors.email}
             helperText={errors.email}
@@ -83,7 +82,6 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
             label="Password"
             type="password"
             autoComplete="current-password"
-            autoFocus
             disabled={loading}
             error={!!errors.password}
             helperText={errors.password}
@@ -105,7 +103,6 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
             label="Password Confirmation"
             type="password"
             autoComplete="current-password"
-            autoFocus
             disabled={loading}
             error={!!errors.password_confirmation}
             helperText={errors.password_confirmation}
