@@ -5,15 +5,27 @@ import { LoginPage } from './pages/LoginPage/Loadable';
 import { SignUpPage } from './pages/SignUpPage/Loadable';
 
 export const guestRoutes: Route[] = [
-  registerRoute({ path: '/login', name: 'login', component: LoginPage }),
-  registerRoute({ path: '/signup', name: 'signup', component: SignUpPage }),
+  registerRoute({
+    path: '/login',
+    name: 'login',
+    component: LoginPage,
+  }),
+  registerRoute({
+    path: '/signup',
+    name: 'signUp',
+    component: SignUpPage,
+  }),
 ];
 
 export const authRoutes: Route[] = [
-  registerRoute({ path: '/', name: 'home', component: HomePage }),
+  registerRoute({
+    path: '/',
+    name: 'home',
+    component: HomePage,
+  }),
   registerRoute({
     path: '/expenses',
-    name: 'expenses.index',
+    name: 'expensesIndex',
     component: ExpensePage,
   }),
 ];

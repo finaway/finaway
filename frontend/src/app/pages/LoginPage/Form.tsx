@@ -70,7 +70,7 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
         <Grid item>
           <Link
             component={RouterLink}
-            to={getRouteByName('signup')}
+            to={getRouteByName('signUp')}
             variant="body2"
           >
             Don't have an account? Sign Up

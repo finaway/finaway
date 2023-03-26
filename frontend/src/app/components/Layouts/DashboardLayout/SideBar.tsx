@@ -34,7 +34,7 @@ const menus = [
   {
     text: 'Expense',
     icon: <AttachMoneyIcon />,
-    path: getRouteByName('expenses.index'),
+    path: getRouteByName('expensesIndex'),
   },
 ];
 
