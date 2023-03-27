@@ -25,6 +25,8 @@ export function Form() {
 
   const optionCurrency = currenciesToOptions(currencies);
 
+  const isDisabled = loadings.creating || loadings.updating || loadings.showing;
+
   return (
     <>
       {/* Input Description */}
@@ -33,7 +35,7 @@ export function Form() {
         label="Description"
         control={control}
         autoFocus
-        disabled={loadings.creating || loadings.updating || loadings.showing}
+        disabled={isDisabled}
       />
 
       {/* Input Date */}
@@ -41,7 +43,7 @@ export function Form() {
         name="date"
         label="Date"
         control={control}
-        disabled={loadings.creating || loadings.updating || loadings.showing}
+        disabled={isDisabled}
       />
 
       {/* Input Currency */}
@@ -50,7 +52,7 @@ export function Form() {
         label="Currency"
         control={control}
         options={optionCurrency}
-        disabled={loadings.creating || loadings.updating || loadings.showing}
+        disabled={isDisabled}
       />
 
       {/* Input Amount */}
@@ -58,7 +60,7 @@ export function Form() {
         name="amount"
         label="Amount"
         control={control}
-        disabled={loadings.creating || loadings.updating || loadings.showing}
+        disabled={isDisabled}
       />
     </>
   );
