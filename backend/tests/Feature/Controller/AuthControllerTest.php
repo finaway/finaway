@@ -27,8 +27,10 @@ class AuthControllerTest extends TestCase
             'email' => 'testuser@example.test',
         ]);
 
-        $response->assertJsonPath('data.name', 'Test User');
-        $response->assertJsonPath('data.email', 'testuser@example.test');
+        $response->assertJsonPath('data.user.name', 'Test User');
+        $response->assertJsonPath('data.user.email', 'testuser@example.test');
+
+        $response->assertJsonStructure(['data' => ['token']]);
     }
 
     public function test_register_with_invalid_data()
