@@ -1,25 +1,17 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { Form, FormValues } from './Form';
-import { useSignUpPageSlice } from './slice';
-import { selectSignUpPage } from './slice/selectors';
+import { Form } from './Form';
+import { Link as RouterLink } from 'react-router-dom';
+import { getRouteByName } from 'app/helpers/routesRegistered';
+import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
 
 export function SignUpPage() {
-  const dispatch = useDispatch();
-
-  const { actions } = useSignUpPageSlice();
-  const { loading, errors } = useSelector(selectSignUpPage);
-
-  const handleSubmit = (values: FormValues) => {
-    dispatch(actions.signup(values));
-  };
-
   return (
     <>
       <Helmet>
@@ -46,7 +38,19 @@ export function SignUpPage() {
             Sign in
           </Typography>
           <Box sx={{ mt: 1 }}>
-            <Form loading={loading} errors={errors} onSubmit={handleSubmit} />
+            <Form />
+
+            <Grid container>
+              <Grid item>
+                <Link
+                  component={RouterLink}
+                  to={getRouteByName('login')}
+                  variant="body2"
+                >
+                  Already have an account? Log in
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Container>

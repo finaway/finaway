@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
 import Dialog from '@mui/material/Dialog';
@@ -14,6 +14,8 @@ import { Expense } from 'models';
 import { useEffectOnce } from 'react-use';
 import { selectExpensePage } from './slice/selectors';
 import dayjs from 'dayjs';
+import { useSyncFormErrors } from 'app/hooks/useSyncFormErrors';
+import { useSyncFormData } from 'app/hooks/useSyncFormData';
 
 interface FormDialogProps {
   open: boolean;
@@ -27,16 +29,33 @@ const defaultValues = {
   date: dayjs(),
 };
 
+function convertToFormValues(data: Expense | null): FormValues {
+  return {
+    description: data?.description || '',
+    amount: data?.amount || 0,
+    currency_id: data?.currency_id || 0,
+    date: data?.date ? dayjs(data.date) : dayjs(),
+  };
+}
+
 export function FormDialog({ open, onClose }: FormDialogProps) {
   const dispatch = useDispatch();
   const { actions } = useExpensePageSlice();
   const { loadings, errors, formData } = useSelector(selectExpensePage);
 
+  const dataConverted = useMemo(
+    () => convertToFormValues(formData),
+    [formData],
+  );
+
   const isEditing = !!formData?.id;
 
-  const formCtx = useForm<FormValues>({
+  const methods = useForm<FormValues>({
     defaultValues: defaultValues,
   });
+
+  useSyncFormData<FormValues>(methods, dataConverted);
+  useSyncFormErrors<FormValues>(methods, errors);
 
   const onSubmit = (values: FormValues) => {
     const payload: Expense = {
@@ -57,39 +76,17 @@ export function FormDialog({ open, onClose }: FormDialogProps) {
     dispatch(actions.fetchCurrencies());
   });
 
-  // Sync errors from redux to form context
-  useEffect(() => {
-    Object.entries(errors).forEach(([key, value]) => {
-      formCtx.setError(key as keyof FormValues, {
-        type: 'manual',
-        message: value?.[0],
-      });
-    });
-  }, [errors, formCtx]);
-
-  // Sync form data from redux to form context
-  useEffect(() => {
-    if (formData) {
-      formCtx.reset({
-        ...formData,
-        date: dayjs(formData?.date),
-      });
-    } else {
-      formCtx.reset(defaultValues);
-    }
-  }, [formCtx, formData]);
-
   // Reset form context when dialog is closed
   useEffect(() => {
     if (!open) {
-      formCtx.reset(defaultValues);
+      methods.reset(defaultValues);
     }
-  }, [formCtx, open]);
+  }, [methods, open]);
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <FormProvider {...formCtx}>
-        <form onSubmit={formCtx.handleSubmit(onSubmit)}>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
           <DialogTitle>
             {isEditing ? 'Edit Expense' : 'Add Expense'}
           </DialogTitle>

@@ -59,8 +59,9 @@ export function ExpensePage() {
           bottom: 16,
           right: 16,
         }}
+        onClick={handleCreate}
       >
-        <AddIcon onClick={handleCreate} />
+        <AddIcon />
       </Fab>
 
       <FormDialog open={formOpen} onClose={handleFormClose} />

@@ -1,113 +1,73 @@
 import React from 'react';
-import { useForm, SubmitHandler, Controller } from 'react-hook-form';
-import { Link as RouterLink } from 'react-router-dom';
-import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import { useForm } from 'react-hook-form';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { getRouteByName } from 'app/helpers/routesRegistered';
-import { SignUpPageState } from './slice/types';
 
-export type FormValues = {
+import { selectSignUpPage } from './slice/selectors';
+import { useSignUpPageSlice } from './slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { ControlledInputText } from 'app/components/Inputs';
+import { useSyncFormErrors } from 'app/hooks/useSyncFormErrors';
+
+type FormValues = {
   name: string;
   email: string;
   password: string;
   password_confirmation: string;
 };
 
-type FormProps = {
-  loading: boolean;
-  errors: SignUpPageState['errors'];
-  onSubmit: SubmitHandler<FormValues>;
-};
+export function Form() {
+  const dispatch = useDispatch();
 
-export function Form({ loading, errors, onSubmit }: FormProps) {
-  const { handleSubmit, control } = useForm<FormValues>();
+  const { actions } = useSignUpPageSlice();
+  const { loadings, errors } = useSelector(selectSignUpPage);
+
+  const methods = useForm<FormValues>();
+  const { handleSubmit, control } = methods;
+
+  useSyncFormErrors<FormValues>(methods, errors);
+
+  const onSubmit = (data: FormValues) => {
+    dispatch(actions.signUp(data));
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
+      {/* Input Name */}
+      <ControlledInputText
         name="name"
+        label="Email"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="name"
-            label="Name"
-            autoComplete="name"
-            autoFocus
-            disabled={loading}
-            error={!!errors.name}
-            helperText={errors.name}
-          />
-        )}
+        autoFocus
+        disabled={loadings.signUp}
       />
 
-      <Controller
+      {/* Input Email */}
+      <ControlledInputText
         name="email"
+        label="Email"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            type="email"
-            autoComplete="email"
-            disabled={loading}
-            error={!!errors.email}
-            helperText={errors.email}
-          />
-        )}
+        autoFocus
+        disabled={loadings.signUp}
       />
 
-      <Controller
+      {/* Input Password */}
+      <ControlledInputText
         name="password"
+        label="Password"
+        type="password"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="Password"
-            type="password"
-            autoComplete="current-password"
-            disabled={loading}
-            error={!!errors.password}
-            helperText={errors.password}
-          />
-        )}
+        autoFocus
+        disabled={loadings.signUp}
       />
 
-      <Controller
+      {/* Input Password Confirmation */}
+      <ControlledInputText
         name="password_confirmation"
+        label="Password Confirmation"
+        type="password"
         control={control}
-        render={({ field: { onChange, value } }) => (
-          <TextField
-            onChange={onChange}
-            value={value}
-            margin="normal"
-            required
-            fullWidth
-            id="password_confirmation"
-            label="Password Confirmation"
-            type="password"
-            autoComplete="current-password"
-            disabled={loading}
-            error={!!errors.password_confirmation}
-            helperText={errors.password_confirmation}
-          />
-        )}
+        autoFocus
+        disabled={loadings.signUp}
       />
 
       <LoadingButton
@@ -115,22 +75,10 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
         fullWidth
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
-        loading={loading}
+        loading={loadings.signUp}
       >
         Sign In
       </LoadingButton>
-
-      <Grid container>
-        <Grid item>
-          <Link
-            component={RouterLink}
-            to={getRouteByName('login')}
-            variant="body2"
-          >
-            Already have an account? Log in
-          </Link>
-        </Grid>
-      </Grid>
     </form>
   );
 }
