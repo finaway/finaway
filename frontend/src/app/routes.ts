@@ -15,6 +15,11 @@ export const guestRoutes: Route[] = [
     name: 'signUp',
     component: SignUpPage,
   }),
+  registerRoute({
+    path: '/forgot-password',
+    name: 'forgotPassword',
+    component: SignUpPage,
+  }),
 ];
 
 export const authRoutes: Route[] = [

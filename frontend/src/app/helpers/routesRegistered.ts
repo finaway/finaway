@@ -2,6 +2,7 @@ export const ROUTE_NAMES = {
   home: 'home',
   login: 'login',
   signUp: 'sign-up',
+  forgotPassword: 'forgot-password',
   expensesIndex: 'expenses-index',
 } as const;
 

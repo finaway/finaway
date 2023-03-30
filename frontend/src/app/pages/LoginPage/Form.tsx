@@ -63,7 +63,11 @@ export function Form({ loading, errors, onSubmit }: FormProps) {
 
       <Grid container>
         <Grid item xs>
-          <Link href="#" variant="body2">
+          <Link
+            component={RouterLink}
+            to={getRouteByName('forgotPassword')}
+            variant="body2"
+          >
             Forgot password?
           </Link>
         </Grid>
