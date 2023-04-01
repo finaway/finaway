@@ -7,4 +7,7 @@ export interface Expense {
   date?: string;
   currency_id?: number;
   currency?: Currency;
+
+  created_at?: string;
+  updated_at?: string;
 }

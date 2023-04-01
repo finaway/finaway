@@ -67,7 +67,35 @@ const slice = createSlice({
     },
     createExpenseSuccess(state, action: PayloadAction<Response<Expense>>) {
       state.loadings.creating = false;
-      state.expenses.push(action.payload.data);
+
+      state.expenses =
+        state.expenses.length === 0
+          ? [action.payload.data]
+          : state.expenses.concat(action.payload.data).sort((a, b) => {
+              const aDate = new Date(a.date!);
+              const bDate = new Date(b.date!);
+
+              const aCreatedAt = new Date(a.created_at!);
+              const bCreatedAt = new Date(b.created_at!);
+
+              if (aDate > bDate) {
+                return -1;
+              }
+
+              if (aDate < bDate) {
+                return 1;
+              }
+
+              if (aCreatedAt > bCreatedAt) {
+                return -1;
+              }
+
+              if (aCreatedAt < bCreatedAt) {
+                return 1;
+              }
+
+              return 0;
+            });
     },
     createExpenseError(state, action: PayloadAction<any>) {
       state.loadings.creating = false;
@@ -101,6 +129,10 @@ const slice = createSlice({
     deleteExpense(state, action: PayloadAction<number>) {
       state.loadings.deleting = true;
       state.loadings.deleting_id = action.payload;
+
+      state.expenses = state.expenses.filter(
+        expense => expense.id !== action.payload,
+      );
     },
     deleteExpenseSuccess(state, action: PayloadAction<Response<Expense>>) {
       state.loadings.deleting = false;

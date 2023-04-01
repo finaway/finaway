@@ -35,7 +35,7 @@ export function Form() {
       {/* Input Name */}
       <ControlledInputText
         name="name"
-        label="Email"
+        label="Name"
         control={control}
         autoFocus
         disabled={loadings.signUp}

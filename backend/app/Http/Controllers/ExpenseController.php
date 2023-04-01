@@ -11,7 +11,11 @@ class ExpenseController extends Controller
     public function index()
     {
         $userId = auth()->user()->id;
-        $data = Expense::with('currency')->where('user_id', $userId)->get();
+        $data = Expense::with('currency')
+            ->where('user_id', $userId)
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return response()->json([
             'data' => $data,

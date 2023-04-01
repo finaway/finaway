@@ -51,6 +51,10 @@ class ExpenseControllerTest extends TestCase
                 ],
             ],
         ]);
+
+        // Check if the data is sorted by date descending
+        $response->assertJsonPath('data.0.id', $this->user->expenses()->orderBy('date', 'desc')->first()->id);
+        $response->assertJsonPath('data.4.id', $this->user->expenses()->orderBy('date', 'asc')->first()->id);
     }
 
     public function test_index_with_different_user()

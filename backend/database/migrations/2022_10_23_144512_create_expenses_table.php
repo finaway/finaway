@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('currency_id')->constrained();
             $table->date('date');
             $table->string('description');
-            $table->decimal('amount', 8, 2);
+            $table->decimal('amount', 16, 2);
             $table->timestamps();
         });
     }
