@@ -18,7 +18,7 @@ import { AuthRoute, GuestRoute } from './components/Route';
 import { slices } from 'store/bootstrapSlices';
 import { authRoutes, guestRoutes } from './routes';
 import { ReduxRouterConnector } from './components/ReduxRouterConnector';
-import { DashboardLayout } from './components/Layouts/DashboardLayout/Loadable';
+import { DashboardLayout } from './components/DashboardLayout';
 
 export function App() {
   const { i18n } = useTranslation();

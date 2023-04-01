@@ -17,6 +17,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useNavigate } from 'react-router-dom';
 
 const menuListWidth = 170;
 
@@ -27,6 +28,8 @@ interface Props {
 }
 
 export function NavBar({ title, onDrawerOpen, onLogout }: Props) {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -85,7 +88,12 @@ export function NavBar({ title, onDrawerOpen, onLogout }: Props) {
               },
             }}
           >
-            <MenuItem>
+            <MenuItem
+              onClick={() => {
+                navigate('/profile');
+                handleClose();
+              }}
+            >
               <ListItemIcon>
                 <PersonIcon />
               </ListItemIcon>

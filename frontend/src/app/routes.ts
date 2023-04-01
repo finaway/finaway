@@ -2,6 +2,7 @@ import { registerRoute, Route } from './helpers/routesRegistered';
 import { ExpensePage } from './pages/ExpensePage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 import { LoginPage } from './pages/LoginPage/Loadable';
+import { ProfilePage } from './pages/ProfilePage/Loadable';
 import { SignUpPage } from './pages/SignUpPage/Loadable';
 
 export const guestRoutes: Route[] = [
@@ -32,5 +33,10 @@ export const authRoutes: Route[] = [
     path: '/expenses',
     name: 'expensesIndex',
     component: ExpensePage,
+  }),
+  registerRoute({
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage,
   }),
 ];

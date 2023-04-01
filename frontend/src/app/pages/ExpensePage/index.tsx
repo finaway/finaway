@@ -9,6 +9,7 @@ import { FormDialog } from './FormDialog';
 import { List } from './List';
 import { useAppBarTitle } from 'app/hooks/useAppBarTitle';
 import { Helmet } from 'react-helmet-async';
+import { ContentWrapper } from 'app/components/ContentWrapper';
 
 export function ExpensePage() {
   useAppBarTitle('Expense');
@@ -39,7 +40,7 @@ export function ExpensePage() {
   });
 
   return (
-    <>
+    <ContentWrapper>
       <Helmet>
         <title>Expense</title>
       </Helmet>
@@ -65,6 +66,6 @@ export function ExpensePage() {
       </Fab>
 
       <FormDialog open={formOpen} onClose={handleFormClose} />
-    </>
+    </ContentWrapper>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NavBar } from './NavBar';
-import Container from '@mui/material/Container';
 import { SideBar } from './SideBar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuthSlice } from 'app/global-stores/auth';
@@ -41,14 +40,14 @@ export function DashboardLayout({ children }: Props) {
         onClose={handleDrawerClose}
         onLogout={handleLogout}
       />
-      <Container
-        maxWidth="sm"
-        sx={{
-          marginTop: '64px',
+
+      <div
+        style={{
+          marginTop: '70px',
         }}
       >
         {children}
-      </Container>
+      </div>
     </>
   );
 }

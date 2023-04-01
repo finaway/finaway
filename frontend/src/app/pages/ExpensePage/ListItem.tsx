@@ -1,11 +1,12 @@
 import React from 'react';
 import ListItemMui from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Paper from '@mui/material/Paper';
 import CircularProgress from '@mui/material/CircularProgress';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Expense } from 'models';
-import { IconButton, Paper } from '@mui/material';
 import dayjs from 'dayjs';
 
 interface ListItemProps {
@@ -22,7 +23,7 @@ export function ListItem({ data, loadings, onEdit, onDelete }: ListItemProps) {
   const humanDate = dayjs(data.date).format('MMM D, YYYY');
 
   return (
-    <Paper>
+    <Paper sx={{ marginBottom: 1 }}>
       <ListItemMui
         secondaryAction={
           <>
