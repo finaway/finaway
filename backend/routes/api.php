@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
 
     Route::get('/currencies', [CurrencyController::class, 'index']);
 
