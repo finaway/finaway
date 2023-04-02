@@ -17,6 +17,7 @@ class ProfileController extends Controller
         ]);
 
         return response()->json([
+            'data' => $request->user(),
             'message' => 'Name updated',
         ]);
     }

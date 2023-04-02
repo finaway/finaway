@@ -26,6 +26,8 @@ class ProfileControllerTest extends TestCase
         ]);
 
         $response->assertStatus(200);
+        $response->assertJsonStructure(['data' => ['id', 'name', 'email']]);
+        $response->assertJson(['data' => ['name' => 'Test User']]);
 
         $this->assertDatabaseHas('users', [
             'name' => 'Test User',
