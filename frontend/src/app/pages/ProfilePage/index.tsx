@@ -19,10 +19,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { red } from '@mui/material/colors';
 import { useAuthSlice } from 'app/global-stores/auth';
+import { useNavigate } from 'react-router-dom';
+import { getRouteByName } from 'app/helpers/routesRegistered';
+import { Helmet } from 'react-helmet-async';
 
 export function ProfilePage() {
   useAppBarTitle('Profile');
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { user } = useSelector(selectAuth);
@@ -34,6 +38,10 @@ export function ProfilePage() {
 
   return (
     <ContentWrapper>
+      <Helmet>
+        <title>Profile</title>
+      </Helmet>
+
       <Paper
         sx={{
           paddingX: 3,
@@ -69,7 +77,7 @@ export function ProfilePage() {
 
       <Paper sx={{ marginTop: 2 }}>
         <MenuList>
-          <MenuItem>
+          <MenuItem onClick={() => navigate(getRouteByName('profileEdit'))}>
             <ListItemIcon>
               <PersonIcon fontSize="small" />
             </ListItemIcon>

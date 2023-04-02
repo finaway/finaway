@@ -5,6 +5,8 @@ export const ROUTE_NAMES = {
   forgotPassword: 'forgot-password',
   expensesIndex: 'expenses-index',
   profile: 'profile',
+  profileEdit: 'profileEdit',
+  profilePassword: 'profilePassword',
 } as const;
 
 type RouteName = keyof typeof ROUTE_NAMES;

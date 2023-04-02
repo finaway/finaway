@@ -8,9 +8,9 @@ function* login(action: ReturnType<typeof LoginPageActions.login>) {
   try {
     const response = yield call(api.auth.login, action.payload);
 
+    yield put(LoginPageActions.loginSuccess(response));
     yield put(AuthActions.setToken(response.data.data.token));
     yield put(AuthActions.setUser(response.data.data.user));
-    yield put(LoginPageActions.loginSuccess());
   } catch (err) {
     yield put(LoginPageActions.loginError(err as AxiosError | Error));
   }
