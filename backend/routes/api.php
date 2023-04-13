@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\ExpenseReportController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -34,4 +35,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/currencies', [CurrencyController::class, 'index']);
 
     Route::resource('expenses', ExpenseController::class);
+    Route::get('/expenses/reports/income/{type}', [ExpenseReportController::class, 'getTotalIncomeExpenses']);
 });

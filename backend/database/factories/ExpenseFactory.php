@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Currency;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,13 +17,13 @@ class ExpenseFactory extends Factory
      */
     public function definition()
     {
-        $currencyIdRupiah = \App\Models\Currency::where('code', 'IDR')->first()->id;
+        $currencyIdRupiah = Currency::where('code', 'IDR')->first()->id;
 
         return [
-            'date' => $this->faker->date(),
-            'description' => $this->faker->sentence(),
-            'amount' => $this->faker->randomFloat(2, 0, 1000),
             'currency_id' => $currencyIdRupiah,
+            'date' => $this->faker->dateTimeBetween('-2 years', 'now')->format('Y-m-d'),
+            'description' => $this->faker->sentence(),
+            'amount' => $this->faker->numberBetween(1000, 250000),
         ];
     }
 }

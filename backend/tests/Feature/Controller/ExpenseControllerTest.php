@@ -14,6 +14,8 @@ class ExpenseControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private $user, $currency;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -90,7 +92,7 @@ class ExpenseControllerTest extends TestCase
         $response->assertStatus(201);
 
         $response->assertJsonPath('data.description', $expense->description);
-        $response->assertJsonPath('data.amount', $expense->amount);
+        $response->assertJsonPath('data.amount', intval($expense->amount));
         $response->assertJsonPath('data.currency.id', $this->currency->id);
         $response->assertJsonPath('data.date', $expense->date);
 
@@ -113,7 +115,7 @@ class ExpenseControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonPath('data.description', $expense->description);
-        $response->assertJsonPath('data.amount', $expense->amount);
+        $response->assertJsonPath('data.amount', intval($expense->amount));
         $response->assertJsonPath('data.currency.id', $expense->currency_id);
         $response->assertJsonPath('data.date', $expense->date);
 
@@ -153,7 +155,7 @@ class ExpenseControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonPath('data.description', $newExpense->description);
-        $response->assertJsonPath('data.amount', $newExpense->amount);
+        $response->assertJsonPath('data.amount', intval($newExpense->amount));
         $response->assertJsonPath('data.currency.id', $this->currency->id);
         $response->assertJsonPath('data.date', $newExpense->date);
 
