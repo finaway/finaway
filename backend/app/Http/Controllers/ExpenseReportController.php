@@ -42,8 +42,8 @@ class ExpenseReportController extends Controller
 
         return response()->json([
             'data' => [
-                'total_income' => $totalIncome,
-                'total_expenses' => $totalExpenses,
+                'total_income' => floatval($totalIncome),
+                'total_expenses' => floatval($totalExpenses),
             ],
         ]);
     }

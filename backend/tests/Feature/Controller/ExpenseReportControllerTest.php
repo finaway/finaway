@@ -10,6 +10,7 @@ use Database\Seeders\ExpenseSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Constraint\IsType;
 use Tests\TestCase;
 
 class ExpenseReportControllerTest extends TestCase
@@ -40,6 +41,7 @@ class ExpenseReportControllerTest extends TestCase
             ->sum('amount');
 
         $response = $this->getJson('/api/expenses/reports/income/weekly');
+        $responseData = $response->json('data');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -49,8 +51,17 @@ class ExpenseReportControllerTest extends TestCase
             ],
         ]);
 
-        $response->assertJsonPath('data.total_income', $actualIncome);
-        $response->assertJsonPath('data.total_expenses', $actualExpenses);
+        $this->assertThat($responseData['total_income'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+        $this->assertThat($responseData['total_expenses'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+
+        $this->assertEquals($actualIncome, floatval($responseData['total_income']));
+        $this->assertEquals($actualExpenses, floatval($responseData['total_expenses']));
     }
 
     public function test_get_total_income_expenses_monthly()
@@ -64,6 +75,7 @@ class ExpenseReportControllerTest extends TestCase
             ->sum('amount');
 
         $response = $this->getJson('/api/expenses/reports/income/monthly');
+        $responseData = $response->json('data');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -73,8 +85,17 @@ class ExpenseReportControllerTest extends TestCase
             ],
         ]);
 
-        $response->assertJsonPath('data.total_income', $actualIncome);
-        $response->assertJsonPath('data.total_expenses', $actualExpenses);
+        $this->assertThat($responseData['total_income'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+        $this->assertThat($responseData['total_expenses'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+
+        $this->assertEquals($actualIncome, floatval($responseData['total_income']));
+        $this->assertEquals($actualExpenses, floatval($responseData['total_expenses']));
     }
 
     public function test_get_total_income_expenses_yearly()
@@ -88,6 +109,7 @@ class ExpenseReportControllerTest extends TestCase
             ->sum('amount');
 
         $response = $this->getJson('/api/expenses/reports/income/yearly');
+        $responseData = $response->json('data');
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
@@ -97,7 +119,16 @@ class ExpenseReportControllerTest extends TestCase
             ],
         ]);
 
-        $response->assertJsonPath('data.total_income', $actualIncome);
-        $response->assertJsonPath('data.total_expenses', $actualExpenses);
+        $this->assertThat($responseData['total_income'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+        $this->assertThat($responseData['total_expenses'], $this->logicalOr(
+            new IsType(IsType::TYPE_INT),
+            new IsType(IsType::TYPE_FLOAT)
+        ));
+
+        $this->assertEquals($actualIncome, floatval($responseData['total_income']));
+        $this->assertEquals($actualExpenses, floatval($responseData['total_expenses']));
     }
 }
