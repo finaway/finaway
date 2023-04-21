@@ -7,6 +7,7 @@ import { SignUpPageState } from 'app/pages/SignUpPage/slice/types';
 import { ForgotPasswordPageState } from 'app/pages/ForgotPasswordPage/slice/types';
 import { EditProfilePageState } from 'app/pages/ProfilePage/EditProfilePage/slice/types';
 import { EditPasswordPageState } from 'app/pages/ProfilePage/EditPasswordPage/slice/types';
+import { HomePageState } from 'app/pages/HomePage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -23,5 +24,6 @@ export interface RootState {
   forgotPasswordPage?: ForgotPasswordPageState;
   editProfilePage?: EditProfilePageState;
   editPasswordPage?: EditPasswordPageState;
+  homePage?: HomePageState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

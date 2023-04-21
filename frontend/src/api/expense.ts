@@ -8,4 +8,16 @@ export const apiExpense = {
   update: (id: number, body: Expense) =>
     axios.put<Response<Expense>>(`/expenses/${id}`, body),
   delete: (id: number) => axios.delete<Response<Expense>>(`/expenses/${id}`),
+  reportIncomeWeekly: () =>
+    axios.get<Response<{ total_income: number; total_expenses: number }>>(
+      'expenses/reports/income/weekly',
+    ),
+  reportIncomeMonthly: () =>
+    axios.get<Response<{ total_income: number; total_expenses: number }>>(
+      'expenses/reports/income/monthly',
+    ),
+  reportIncomeYearly: () =>
+    axios.get<Response<{ total_income: number; total_expenses: number }>>(
+      'expenses/reports/income/yearly',
+    ),
 };
