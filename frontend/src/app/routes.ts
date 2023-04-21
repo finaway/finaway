@@ -2,6 +2,7 @@ import { registerRoute, Route } from './helpers/routesRegistered';
 import { ExpensePage } from './pages/ExpensePage/Loadable';
 import { HomePage } from './pages/HomePage/Loadable';
 import { LoginPage } from './pages/LoginPage/Loadable';
+import { EditPasswordPage } from './pages/ProfilePage/EditPasswordPage/Loadable';
 import { EditProfilePage } from './pages/ProfilePage/EditProfilePage/Loadable';
 import { ProfilePage } from './pages/ProfilePage/Loadable';
 import { SignUpPage } from './pages/SignUpPage/Loadable';
@@ -44,5 +45,10 @@ export const authRoutes: Route[] = [
     path: '/profile/edit',
     name: 'profileEdit',
     component: EditProfilePage,
+  }),
+  registerRoute({
+    path: '/profile/password',
+    name: 'profilePassword',
+    component: EditPasswordPage,
   }),
 ];

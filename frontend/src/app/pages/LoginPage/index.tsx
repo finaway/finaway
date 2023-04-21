@@ -47,6 +47,12 @@ export function LoginPage() {
           </Box>
         </Box>
       </Container>
+
+      <style>{`
+        html, body {
+          background-color: #fff;
+        }
+      `}</style>
     </>
   );
 }

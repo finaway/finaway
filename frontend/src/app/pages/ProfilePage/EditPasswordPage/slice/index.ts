@@ -1,12 +1,12 @@
 import { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from 'utils/@reduxjs/toolkit';
 import { useInjectReducer, useInjectSaga } from 'utils/redux-injectors';
-import { editProfilePageSaga } from './saga';
-import { EditProfilePageState, EditProfilePageUpdateError } from './types';
-import axios, { AxiosError } from 'axios';
+import { editPasswordPageSaga } from './saga';
+import { EditPasswordPageState, EditPasswordPageUpdateError } from './types';
 import { api } from 'api';
+import axios, { AxiosError } from 'axios';
 
-export const initialState: EditProfilePageState = {
+export const initialState: EditPasswordPageState = {
   loadings: {
     updating: false,
   },
@@ -14,12 +14,12 @@ export const initialState: EditProfilePageState = {
 };
 
 const slice = createSlice({
-  name: 'editProfilePage',
+  name: 'editPasswordPage',
   initialState,
   reducers: {
     update(
       state,
-      action: PayloadAction<Parameters<typeof api.profile.update>[0]>,
+      action: PayloadAction<Parameters<typeof api.profile.updatePassword>[0]>,
     ) {
       state.loadings.updating = true;
       state.errors = {};
@@ -33,16 +33,18 @@ const slice = createSlice({
 
       const err = action.payload;
       if (axios.isAxiosError(err) && err.response) {
-        state.errors = (err.response.data as EditProfilePageUpdateError).errors;
+        state.errors = (
+          err.response.data as EditPasswordPageUpdateError
+        ).errors;
       }
     },
   },
 });
 
-export const { actions: editProfilePageActions } = slice;
+export const { actions: editPasswordPageActions } = slice;
 
-export const useEditProfilePageSlice = () => {
+export const useEditPasswordPageSlice = () => {
   useInjectReducer({ key: slice.name, reducer: slice.reducer });
-  useInjectSaga({ key: slice.name, saga: editProfilePageSaga });
+  useInjectSaga({ key: slice.name, saga: editPasswordPageSaga });
   return { actions: slice.actions };
 };

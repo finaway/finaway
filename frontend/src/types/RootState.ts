@@ -6,6 +6,7 @@ import { RouterState } from 'app/global-stores/router/types';
 import { SignUpPageState } from 'app/pages/SignUpPage/slice/types';
 import { ForgotPasswordPageState } from 'app/pages/ForgotPasswordPage/slice/types';
 import { EditProfilePageState } from 'app/pages/ProfilePage/EditProfilePage/slice/types';
+import { EditPasswordPageState } from 'app/pages/ProfilePage/EditPasswordPage/slice/types';
 // [IMPORT NEW CONTAINERSTATE ABOVE] < Needed for generating containers seamlessly
 
 /* 
@@ -21,5 +22,6 @@ export interface RootState {
   router: RouterState;
   forgotPasswordPage?: ForgotPasswordPageState;
   editProfilePage?: EditProfilePageState;
+  editPasswordPage?: EditPasswordPageState;
   // [INSERT NEW REDUCER KEY ABOVE] < Needed for generating containers seamlessly
 }

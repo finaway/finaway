@@ -95,7 +95,7 @@ export function ProfilePage() {
               <KeyboardArrowRightIcon fontSize="small" />
             </Typography>
           </MenuItem>
-          <MenuItem>
+          <MenuItem onClick={() => navigate(getRouteByName('profilePassword'))}>
             <ListItemIcon>
               <KeyIcon fontSize="small" />
             </ListItemIcon>
