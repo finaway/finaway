@@ -16,8 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CurrencySeeder::class,
-            UserSeeder::class,
-            ExpenseSeeder::class,
+            // UserSeeder::class,
+            // ExpenseSeeder::class,
         ]);
     }
 }
