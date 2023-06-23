@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\Income;
 use Illuminate\Http\Request;
 
 class ExpenseReportController extends Controller
@@ -34,7 +35,9 @@ class ExpenseReportController extends Controller
                 ], 400);
         }
 
-        $totalIncome = 0;
+        $totalIncome = Income::where('user_id', $user->id)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->sum('amount');
 
         $totalExpenses = Expense::where('user_id', $user->id)
             ->whereBetween('date', [$startDate, $endDate])

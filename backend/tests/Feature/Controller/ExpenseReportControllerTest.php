@@ -3,10 +3,12 @@
 namespace Tests\Feature\Controller;
 
 use App\Models\Expense;
+use App\Models\Income;
 use App\Models\User;
 use Carbon\Carbon;
 use Database\Seeders\CurrencySeeder;
 use Database\Seeders\ExpenseSeeder;
+use Database\Seeders\IncomeSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -25,7 +27,7 @@ class ExpenseReportControllerTest extends TestCase
 
         Carbon::setTestNow(Carbon::create(2021, 12, 30));
 
-        $this->seed([CurrencySeeder::class, UserSeeder::class, ExpenseSeeder::class]);
+        $this->seed([CurrencySeeder::class, UserSeeder::class, ExpenseSeeder::class, IncomeSeeder::class]);
 
         $this->user = User::first();
     }
@@ -34,7 +36,10 @@ class ExpenseReportControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $actualIncome = 0;
+        $actualIncome = Income::where('date', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'))
+            ->where('date', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('user_id', $this->user->id)
+            ->sum('amount');
         $actualExpenses = Expense::where('date', '>=', Carbon::now()->startOfWeek()->format('Y-m-d'))
             ->where('date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('user_id', $this->user->id)
@@ -68,7 +73,10 @@ class ExpenseReportControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $actualIncome = 0;
+        $actualIncome = Income::where('date', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))
+            ->where('date', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('user_id', $this->user->id)
+            ->sum('amount');
         $actualExpenses = Expense::where('date', '>=', Carbon::now()->startOfMonth()->format('Y-m-d'))
             ->where('date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('user_id', $this->user->id)
@@ -102,7 +110,10 @@ class ExpenseReportControllerTest extends TestCase
     {
         $this->actingAs($this->user);
 
-        $actualIncome = 0;
+        $actualIncome = Income::where('date', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))
+            ->where('date', '<=', Carbon::now()->format('Y-m-d'))
+            ->where('user_id', $this->user->id)
+            ->sum('amount');
         $actualExpenses = Expense::where('date', '>=', Carbon::now()->startOfYear()->format('Y-m-d'))
             ->where('date', '<=', Carbon::now()->format('Y-m-d'))
             ->where('user_id', $this->user->id)
